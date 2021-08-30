@@ -78,24 +78,10 @@ public class RuleActionCodeSnippetTest
 
         // Actions block
         Array<Array> array = new Array<>(3);
-
-        Array<Integer> innerArray;
-
-        innerArray = new Array<>(3);
-        innerArray.addAll(5, 1, 6);
-        array.add(innerArray);
-
-        innerArray = new Array<>(2);
-        innerArray.addAll(0, 2);
-        array.add(innerArray);
-
-        innerArray = new Array<>(2);
-        innerArray.addAll(3, 1);
-        array.add(innerArray);
-
-        innerArray = new Array<>(5);
-        innerArray.addAll(2, 6, 4, 1, 5);
-        array.add(innerArray);
+        array.add(new Array<>(5, 1, 6));
+        array.add(new Array<>(0, 2));
+        array.add(new Array<>(3, 1));
+        array.add(new Array<>(2, 6, 4, 1, 5));
 
         Actions actions = new Actions();
         actions.add(new Variable<>("BuilderNodeConnections", array));
@@ -146,14 +132,8 @@ public class RuleActionCodeSnippetTest
         array1D.add(new Vector(-15.981, 0.35, 15.908));
 
         Array<Array> array2D = new Array<>(2);
-        Array<Integer> innerArray;
-        innerArray = new Array<>(2);
-        innerArray.addAll(3, 1);
-        array2D.add(innerArray);
-
-        innerArray = new Array<>(5);
-        innerArray.addAll(2, 6, 4, 1, 5);
-        array2D.add(innerArray);
+        array2D.add(new Array<>(3, 1));
+        array2D.add(new Array<>(2, 6, 4, 1, 5));
 
         Actions actions = new Actions();
         actions.add(new Variable<>("BuilderNodePositions", array1D));

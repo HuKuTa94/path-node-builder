@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 
 /**
- * Discribes array type of Overwatch workshop
+ * Describes array type of Overwatch workshop
  * @param <T> element type
  */
 public class Array<T>
@@ -25,11 +25,6 @@ public class Array<T>
 
     public Array(T... values) {
         elements = new ArrayList<>();
-        addAll(values);
-    }
-
-    public Array(int initialCapacity, T... values) {
-        elements = new ArrayList<>(initialCapacity);
         addAll(values);
     }
 
