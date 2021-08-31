@@ -1,0 +1,90 @@
+variables
+{
+	global:
+		0: WorkshopSettingInstructions
+		2: PropertyPlayerMovementSpeed
+		3: PropertyBotMovementSpeed
+		4: PropertyFreeCamera
+		5: BuilderHudColorCurrent
+		6: BuilderHudColorBuildMode
+		7: BuilderHudColorEditMode
+		8: BuilderHudColorPathFindingMode
+		9: BuilderMode
+		10: LoopIterator1
+		11: LoopIterator2
+		12: LoopIterator3
+		13: StringConcatNodeId
+		14: StringConcatResult
+		16: BuilderRayCastHitPosition
+		17: BuilderNodePositions
+		18: BuilderNodeConnections
+		19: BuilderNodeEffectIdArray
+		20: BuilderNodeConnectionEffectsId
+		21: BuilderNodeWorldTextIdArray
+		22: BuilderSelectedNodeEffectPos
+		23: BuilderTrySelectNodeInLOS
+		24: BuilderSelectedNodeId
+		25: BuilderInnerArray
+		26: BuilderIsNodeHaveConnection
+		27: IsBuildingProject
+		38: PathFindingStartNodeEffectPos
+		39: PathFindingTargetNodeEffectPos
+		40: BeamEffects
+		41: PathFindingStartNodeId
+		42: PathFindingTargetNodeId
+		48: NodeTriggerRadius
+		51: DisableInspectorWhileCompiling
+		125: NodePositions
+		126: NodeConnections
+		127: DistanceMatrix
+}
+
+actions
+{
+	Global.WorkshopSettingInstructions = False;
+	Global.PropertyPlayerMovementSpeed = 180;
+	Global.PropertyBotMovementSpeed = 100;
+	Global.PropertyFreeCamera = True;
+	Global.BuilderHudColorCurrent = Color(Purple);
+	Global.BuilderHudColorBuildMode = Color(Red);
+	Global.BuilderHudColorEditMode = Color(Yellow);
+	Global.BuilderHudColorPathFindingMode = Color(Purple);
+	Global.BuilderMode = Custom String("PATH FINDING");
+	Global.LoopIterator1 = 9;
+	Global.LoopIterator2 = 3;
+	Global.LoopIterator3 = 1;
+	Global.StringConcatNodeId = 8;
+	Global.StringConcatResult = Custom String("6");
+	Global.BuilderRayCastHitPosition = Vector(-7.908, 0.425, 10.120);
+	Global.BuilderNodePositions = Array(Vector(-16.004, 0.350, -15.965), Vector(-15.994, 0.350, -0.043), Vector(-15.981, 0.350,
+		15.908), Vector(15.941, 0.350, 16.021), Vector(15.980, 0.350, -15.878), Vector(-1.423, 0.350, -16.035), Vector(-1.225, 0.350,
+		4.747), Vector(7.259, 0.350, -0.358), False, Vector(-7.908, 0.425, 10.120));
+	Global.BuilderNodeConnections = Array(Array(5, 1, 6), Array(0, 2), Array(3, 1), Array(2, 6, 4), Array(5, 3, 7), Array(4, 0, 7),
+		Array(0, 3, 7), Array(6, 5, 4), False, Array());
+	Global.BuilderNodeEffectIdArray = Array(Null, Null, Null, Null, Null, Null, Null, Null, Null, Null);
+	Global.BuilderNodeConnectionEffectsId = Array(Array(0, Null, 0, 0, 0, Null, Null), Array(0, 0, Null), Array(0, 0, 0, Null), Array(
+		0, 0, 0, 0, Null, 0, Null), Array(0, 0, 0, 0, 0, Null, 0, Null), Array(0, 0, 0, 0, 0, 0, 0, Null), Array(0, 0, 0, 0, 0, 0, 0,
+		Null, 0), 0, False);
+	Global.BuilderNodeWorldTextIdArray = Array(3, 4, 5, 6, 7, 8, 9, 10, 15, 18);
+	Global.BuilderSelectedNodeEffectPos = Vector(0, -999, 0);
+	Global.BuilderTrySelectNodeInLOS = 8;
+	Global.BuilderSelectedNodeId = -1;
+	Global.BuilderInnerArray = Array();
+	Global.BuilderIsNodeHaveConnection = True;
+	Global.IsBuildingProject = False;
+	Global.PathFindingStartNodeEffectPos = Vector(0, -999, 0);
+	Global.PathFindingTargetNodeEffectPos = Vector(0, -999, 0);
+	Global.BeamEffects = Array();
+	Global.PathFindingStartNodeId = -1;
+	Global.PathFindingTargetNodeId = -1;
+	Global.NodeTriggerRadius = 0.850;
+	Global.DisableInspectorWhileCompiling = False;
+	Global.NodePositions = Array(Vector(-16.004, 0.350, -15.965), Vector(-15.994, 0.350, -0.043), Vector(-15.981, 0.350, 15.908),
+		Vector(15.941, 0.350, 16.021), Vector(15.980, 0.350, -15.878), Vector(-1.423, 0.350, -16.035), Vector(-1.225, 0.350, 4.747),
+		Vector(7.259, 0.350, -0.358));
+	Global.NodeConnections = Array(Array(5, 1, 6), Array(0, 2), Array(3, 1), Array(2, 6, 4), Array(5, 3, 7), Array(4, 0, 7), Array(0,
+		3, 7), Array(6, 5, 4));
+	Global.DistanceMatrix = Array(Array(9999, 1, 2, 2, 2, 1, 1, 2), Array(1, 9999, 1, 2, 3, 2, 2, 3), Array(2, 1, 9999, 1, 2, 3, 2, 3),
+		Array(2, 2, 1, 9999, 1, 2, 1, 2), Array(2, 3, 2, 1, 9999, 1, 2, 1), Array(1, 2, 3, 2, 1, 9999, 2, 1), Array(1, 2, 2, 1, 2, 2,
+		9999, 1), Array(2, 3, 3, 2, 1, 1, 1, 9999));
+}
