@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 /**
- * Describes vector type of overwatch workshop
+ * Describes vector type of Overwatch workshop
  */
 @Getter
 @Setter
