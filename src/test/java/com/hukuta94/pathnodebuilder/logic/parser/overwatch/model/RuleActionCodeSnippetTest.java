@@ -38,7 +38,7 @@ public class RuleActionCodeSnippetTest
         array.add(new Vector(-15.981, 0.35, 15.908));
 
         Actions actions = new Actions();
-        actions.add(new Variable<>("BuilderNodePositions", array));
+        actions.add(new Variable<>(17, "BuilderNodePositions", array));
 
         // Build final code snippet of the workshop's rule
         RuleActionCodeSnippet codeSnippet = new RuleActionCodeSnippet(vars, actions);
@@ -84,7 +84,7 @@ public class RuleActionCodeSnippetTest
         array.add(new Array<>(2, 6, 4, 1, 5));
 
         Actions actions = new Actions();
-        actions.add(new Variable<>("BuilderNodeConnections", array));
+        actions.add(new Variable<>(18, "BuilderNodeConnections", array));
 
         // Build final code snippet of the workshop's rule
         RuleActionCodeSnippet codeSnippet = new RuleActionCodeSnippet(vars, actions);
@@ -136,8 +136,8 @@ public class RuleActionCodeSnippetTest
         array2D.add(new Array<>(2, 6, 4, 1, 5));
 
         Actions actions = new Actions();
-        actions.add(new Variable<>("BuilderNodePositions", array1D));
-        actions.add(new Variable<>("BuilderNodeConnections", array2D));
+        actions.add(new Variable<>(17, "BuilderNodePositions", array1D));
+        actions.add(new Variable<>(18, "BuilderNodeConnections", array2D));
 
         // Build final code snippet of the workshop's rule
         RuleActionCodeSnippet codeSnippet = new RuleActionCodeSnippet(vars, actions);

@@ -1,21 +1,18 @@
 package com.hukuta94.pathnodebuilder.logic.parser.overwatch;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Assertions;
 import com.hukuta94.pathnodebuilder.logic.parser.ParserHelper;
 import com.hukuta94.pathnodebuilder.logic.parser.overwatch.model.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 public class OverwatchParserTest
 {
-    private static OverwatchParser overwatchParser;
-
-    @BeforeAll
-    public static void initTests()
-    {
-        overwatchParser = new OverwatchParser();
-    }
+    @Autowired
+    private OverwatchParser overwatchParser;
 
     @Test
     @DisplayName("Parse input data")
@@ -24,8 +21,8 @@ public class OverwatchParserTest
         // Given
         // Variables block
         Variables vars = new Variables();
-        vars.addGlobal(17, "BuilderNodePositions");
-        vars.addGlobal(18, "BuilderNodeConnections");
+        vars.addGlobal(125, "NodePositions");
+        vars.addGlobal(126, "NodeConnections");
 
         // Actions block
         // Node positions as array of vectors
@@ -52,8 +49,8 @@ public class OverwatchParserTest
         nodeConnections.add(new Array<>(6, 5, 4));
 
         Actions actions = new Actions();
-        actions.add(new Variable<>("BuilderNodePositions", nodePositions));
-        actions.add(new Variable<>("BuilderNodeConnections", nodeConnections));
+        actions.add(new Variable<>(125, "NodePositions", nodePositions));
+        actions.add(new Variable<>(126, "NodeConnections", nodeConnections));
 
         // Build final code snippet of the workshop's rule
         RuleActionCodeSnippet expectedResult = new RuleActionCodeSnippet(vars, actions);

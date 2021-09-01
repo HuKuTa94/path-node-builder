@@ -14,8 +14,15 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class Variable<T>
 {
+    private Integer index;
     private String name;
     private T value;
+
+    public Variable(Integer index, String name)
+    {
+        this.index = index;
+        this.name = name;
+    }
 
     @Override
     public String toString()

@@ -71,7 +71,7 @@ public class Array<T>
             }
 
             // Element is not inner array
-            builder.append(element.toString());
+            builder.append(element != null ? element.toString() : "False");
 
             putCharacterAtEndLine(builder, elements, element);
             tryPutNextLineCharacter(builder, i, elementsSize);
@@ -82,6 +82,10 @@ public class Array<T>
 
     public void putInnerArray(StringBuilder builder, Array<T> array)
     {
+        if (array == null) {
+            builder.append("False");
+        }
+
         builder.append("Array(");
 
         List<T> elements = array.getElements();

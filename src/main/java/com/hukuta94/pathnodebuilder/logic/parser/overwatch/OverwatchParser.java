@@ -1,137 +1,214 @@
 package com.hukuta94.pathnodebuilder.logic.parser.overwatch;
 
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.hukuta94.pathnodebuilder.logic.parser.overwatch.model.*;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.function.Function;
 
-//TODO The first bad code prototype of input data parser. It needs to be refactored in future
+@Component
 public class OverwatchParser
 {
-    private static final Pattern PATTERN_VARIABLES = Pattern.compile(
-            "(?<globalVar>global:)|(?<nodePositions>\\d{1,2}\\s*:\\s*.BuilderNodePositions$)|(?<nodeConnections>\\d{1,2}\\s*:\\s*.BuilderNodeConnections$)",
-            Pattern.MULTILINE | Pattern.DOTALL);
+    private static boolean isInited = false;
 
-    private static final Pattern PATTERN_NODE_POSITIONS = Pattern.compile(
-            "(?: ?\\G|^\\s*Global\\.BuilderNodePositions\\s*=\\s*)(?:Array\\()(?<array>[aA-zZ,\\(\\-0-9\\.\\s\\)]+)",
-            Pattern.MULTILINE);
+    // Input variable names
+    private static String INPUT_VAR_POSITIONS_NAME;
+    private static String INPUT_VAR_CONNECTIONS_NAME;
 
-    private static final Pattern PATTERN_NODE_CONNECTIONS = Pattern.compile(
-            "(?: ?\\G|^\\s*Global\\.BuilderNodeConnections\\s*=\\s*)(?:Array\\()(?<array>[aA-zZ,\\(\\-0-9\\.\\s\\)]+)",
-            Pattern.MULTILINE);
+    // Output variable names
+    private static String OUTPUT_VAR_POSITIONS_NAME;
+    private static String OUTPUT_VAR_CONNECTIONS_NAME;
+    private static String OUTPUT_VAR_MATRIX_NAME;
+    private static Integer OUTPUT_VAR_POSITIONS_INDEX;
+    private static Integer OUTPUT_VAR_CONNECTIONS_INDEX;
+    private static Integer OUTPUT_VAR_MATRIX_INDEX;
+
+    // Patterns and regex to extract input data
+    private static Pattern PATTERN_INPUT_VARS_EXIST;
+    private static Pattern PATTERN_VAR_POSITIONS_ARRAY;
+    private static Pattern PATTERN_VAR_CONNECTIONS_ARRAY;
 
     private static final Pattern PATTERN_SPLIT_VECTOR_TO_COORDS = Pattern.compile(
             "(?<x>\\-?\\d+\\.?\\d+)\\s*\\,\\s*(?<y>\\-?\\d+\\.?\\d+)\\s*\\,\\s*(?<z>\\-?\\d+\\.?\\d+)");
 
-    private static final String REGEX_SPLIT_ARRAY_CONNECTION_TO_PARTS = "[Aarray\\(\\,\\s\\)]+";
+    private static final String REGEX_CAPTURE_ARRAY_WITH_ITEMS = "(?: ?\\G|^\\s*Global\\.%s\\s*=\\s*)(?:Array\\()(?<%s>[aA-zZ,\\(\\-0-9\\.\\s\\)]+)";
+    private static final String REGEX_EXTRACT_ITEMS_FROM_ARRAY = "\\,\\s*(?=F|A|V)";
+    private static final String REGEX_SPLIT_ITEM_TO_PARTS = "[Aarray\\(\\,\\s\\)]+";
 
-    private static final String REGEX_SPLIT_ARRAY_TO_PARTS = "\\,\\s*(?=F|A|V)";
+    // Regex capture group names
+    private static final String GROUP_POSITIONS = "positions";
+    private static final String GROUP_CONNECTIONS = "connections";
+    private static final String GROUP_ARRAY = "array";
+    private static final String GROUP_VARS = "vars";
 
-    public RuleActionCodeSnippet parseInputData(String inputString)
+    @Autowired
+    public OverwatchParser(
+            @Value("${overwatch.variables.input.positions-name}") String inputVarPositionsName,
+            @Value("${overwatch.variables.input.connections-name}") String inputVarConnectionsName,
+            @Value("${overwatch.variables.output.positions-name}") String outputVarPositionsName,
+            @Value("${overwatch.variables.output.positions-index}") Integer outputVarPositionsIndex,
+            @Value("${overwatch.variables.output.connections-name}") String outputVarConnectionsName,
+            @Value("${overwatch.variables.output.connections-index}") Integer outputVarConnectionsIndex,
+            @Value("${overwatch.variables.output.matrix-name}") String outputVarMatrixName,
+            @Value("${overwatch.variables.output.matrix-index}") Integer outputVarMatrixIndex)
+    {
+        if (isInited) {
+            return;
+        }
+
+        isInited = true;
+
+        // Init variable names from config
+        INPUT_VAR_POSITIONS_NAME = inputVarPositionsName;
+        INPUT_VAR_CONNECTIONS_NAME = inputVarConnectionsName;
+        OUTPUT_VAR_POSITIONS_NAME = outputVarPositionsName;
+        OUTPUT_VAR_POSITIONS_INDEX = outputVarPositionsIndex;
+        OUTPUT_VAR_CONNECTIONS_NAME = outputVarConnectionsName;
+        OUTPUT_VAR_CONNECTIONS_INDEX = outputVarConnectionsIndex;
+        OUTPUT_VAR_MATRIX_NAME = outputVarMatrixName;
+        OUTPUT_VAR_MATRIX_INDEX = outputVarMatrixIndex;
+
+        // Init patterns
+        PATTERN_INPUT_VARS_EXIST = Pattern.compile(
+            String.format("(?<%s>global:)|(?<%s>\\d{1,2}\\s*:\\s*%s$)|(?<%s>\\d{1,2}\\s*:\\s*%s$)",
+                    GROUP_VARS,
+                    GROUP_POSITIONS,
+                    INPUT_VAR_POSITIONS_NAME,
+                    GROUP_CONNECTIONS,
+                    INPUT_VAR_CONNECTIONS_NAME),
+            Pattern.MULTILINE | Pattern.DOTALL);
+    }
+
+    public RuleActionCodeSnippet parseInputData(String inputString) throws Exception
     {
         Variables variables = parseVariablesBlock(inputString);
         Actions actions = new Actions();
 
-        parseNodePositions(inputString, actions);
-        parseNodeConnections(inputString, actions);
+        parseInputVarArray(
+            inputString,
+            INPUT_VAR_POSITIONS_NAME,
+            16,
+            actions,
+            this::nodePositionItemProcessor
+        );
+
+        parseInputVarArray(
+            inputString,
+            INPUT_VAR_CONNECTIONS_NAME,
+            17,
+            actions,
+            this::nodeConnectionItemProcessor
+        );
+
         return new RuleActionCodeSnippet(variables, actions);
     }
 
-    private Variables parseVariablesBlock(String inputString)
+    private Variables parseVariablesBlock(String inputString) throws Exception
     {
-        Variables variables = new Variables();
-
-        Matcher matcher = PATTERN_VARIABLES.matcher(inputString);
-        if (matcher.find())
+        // Try find input vars in string
+        Matcher matcher = PATTERN_INPUT_VARS_EXIST.matcher(inputString);
+        if (!matcher.find())
         {
-            if (matcher.group("globalVar").equals("global:"))
-            {
-                matcher.find();
-                String globalVar = matcher.group("nodePositions");
-                if (globalVar != null)
-                {
-                    String[] parts = globalVar.split("\\s*:\\s*");
-                    Integer index = Integer.parseInt(parts[0]);
-                    variables.addGlobal(index, parts[1]);
-                }
+            throw new Exception("Input string does not contain input data variables '" +
+                INPUT_VAR_POSITIONS_NAME + "' and/or '" + INPUT_VAR_CONNECTIONS_NAME + "'");
+        }
 
-                matcher.find();
-                globalVar = matcher.group("nodeConnections");
-                if (globalVar != null)
-                {
-                    String[] parts = globalVar.split("\\s*:\\s*");
-                    Integer index = Integer.parseInt(parts[0]);
-                    variables.addGlobal(index, parts[1]);
-                }
+        Variables variables = new Variables();
+        Actions actions = new Actions();
+
+        // Input vars exist in the global block
+        if (matcher.group(GROUP_VARS).equals("global:"))
+        {
+            // Vars exist, trying extract var indexes and names
+            while (matcher.find())
+            {
+                String var = matcher.group();
+
+                // This string has format "X: VarName", X - number in range from 0 to 127
+                String[] varParts = var.split("\\s*\\:\\s*");
+                variables.addGlobal(Integer.parseInt(varParts[0]), varParts[1]);
             }
         }
 
         return variables;
     }
 
-    private void parseNodePositions(String inputString, Actions actions)
+    private <T> void parseInputVarArray(
+            String inputString,
+            String inputVarName,
+            Integer inputVarIndex,
+            Actions actions,
+            Function<String, T> arrayItemProcessor)
     {
-        Matcher matcher = PATTERN_NODE_POSITIONS.matcher(inputString);
+        // Extract from var the array with items
+        Pattern pattern = Pattern.compile(
+                String.format(REGEX_CAPTURE_ARRAY_WITH_ITEMS, inputVarName, GROUP_ARRAY),
+                Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(inputString);
 
+        // Try find input var in string
         while (matcher.find())
         {
-            Array<Vector> nodePositionsArray = new Array<>();
-            String[] vectors = matcher.group("array").split(REGEX_SPLIT_ARRAY_TO_PARTS);
+            Array<T> array = new Array<>();
+            String[] items = matcher.group(GROUP_ARRAY).split(REGEX_EXTRACT_ITEMS_FROM_ARRAY);
 
-            for (String item : vectors)
+            for (String item : items)
             {
-                if (item.toLowerCase().contains("vector"))
+                // Item is empty (it was deleted in Path Node Builder - Overwatch Workshop mod)
+                if (item.toLowerCase().contains("false"))
                 {
-                    Matcher coordMatcher = PATTERN_SPLIT_VECTOR_TO_COORDS.matcher(item);
-                    if (coordMatcher.find()) {
+                    // Don't skip these elements because we need to optimize data before computing the distance matrix:
+                    // if we delete the path node, all indexes in connection arrays must be recomputed
+                    array.add(null);
+                    continue;
+                }
 
-                        nodePositionsArray.add(
-                            new Vector(
-                                Double.parseDouble(coordMatcher.group("x")),
-                                Double.parseDouble(coordMatcher.group("y")),
-                                Double.parseDouble(coordMatcher.group("z"))
-                            )
-                        );
-                    }
+                T processedItem = arrayItemProcessor.apply(item);
+
+                // Don't put in the result array if the item is null.
+                // Nullable items are detected above by keyword "false"
+                if (processedItem != null) {
+                    array.add(processedItem);
                 }
             }
 
-            Variable<Array> variable = new Variable<>("BuilderNodePositions", nodePositionsArray);
+            Variable<Array> variable = new Variable<>(inputVarIndex, inputVarName, array);
             actions.add(variable);
         }
     }
 
-    private void parseNodeConnections(String inputString, Actions actions)
+    private Vector nodePositionItemProcessor(String item)
     {
-        Matcher matcher = PATTERN_NODE_CONNECTIONS.matcher(inputString);
-
-        while (matcher.find())
+        Matcher matcher = PATTERN_SPLIT_VECTOR_TO_COORDS.matcher(item);
+        if (matcher.find())
         {
-            Array<Array> nodeConnectionsArray = new Array<>();
-            String[] arrays = matcher.group("array").split(REGEX_SPLIT_ARRAY_TO_PARTS);
-
-            for (String item : arrays)
-            {
-                if (item.toLowerCase().contains("array"))
-                {
-                    String[] arrayParts = item.split(REGEX_SPLIT_ARRAY_CONNECTION_TO_PARTS);
-                    if (arrayParts.length == 0) {
-                        continue;
-                    }
-
-                    Array<Integer> connections = new Array<>();
-                    for (String part : arrayParts) {
-                        if (!part.isEmpty()) {
-                            connections.add(Integer.parseInt(part));
-                        }
-                    }
-
-                    nodeConnectionsArray.add(connections);
-                }
-            }
-
-            Variable<Array> variable = new Variable<>("BuilderNodeConnections", nodeConnectionsArray);
-            actions.add(variable);
+            return new Vector(
+                Double.parseDouble(matcher.group("x")),
+                Double.parseDouble(matcher.group("y")),
+                Double.parseDouble(matcher.group("z")));
         }
+
+        return null;
+    }
+
+    private Array<Integer> nodeConnectionItemProcessor(String item)
+    {
+        String[] itemParts = item.split(REGEX_SPLIT_ITEM_TO_PARTS);
+        if (itemParts.length == 0) {
+            return null;
+        }
+
+        Array<Integer> connections = new Array<>();
+        for (String part : itemParts) {
+            if (!part.isEmpty()) {
+                connections.add(Integer.parseInt(part));
+            }
+        }
+
+        return connections;
     }
 }
