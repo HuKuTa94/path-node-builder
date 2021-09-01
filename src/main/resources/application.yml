@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: PathNodeBuilder
+
+#Overwatch input/output variables names
+overwatch:
+  variables:
+    input:
+      positions-name: BuilderNodePositions
+      connections-name: BuilderNodeConnections
+    output:
+      positions-name: NodePositions
+      positions-index: 125
+      connections-name: NodeConnections
+      connections-index: 126
+      matrix-name: DistanceMatrix
+      matrix-index: 127
