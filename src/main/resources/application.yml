@@ -5,6 +5,7 @@ spring:
 #Overwatch input/output variables names
 overwatch:
   variables:
+    #For input vars doesn't matter index
     input:
       positions-name: BuilderNodePositions
       connections-name: BuilderNodeConnections
