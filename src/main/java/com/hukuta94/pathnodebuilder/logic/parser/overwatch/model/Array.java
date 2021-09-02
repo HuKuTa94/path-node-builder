@@ -40,6 +40,10 @@ public class Array<T>
         return elements.get(index);
     }
 
+    public int size() {
+        return elements.size();
+    }
+
     @Override
     public String toString()
     {
@@ -80,7 +84,7 @@ public class Array<T>
         return builder.toString();
     }
 
-    public void putInnerArray(StringBuilder builder, Array<T> array)
+    private void putInnerArray(StringBuilder builder, Array<T> array)
     {
         if (array == null) {
             builder.append("False");
