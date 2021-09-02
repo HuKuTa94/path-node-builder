@@ -32,22 +32,15 @@ public class RuleActionCodeSnippetTest
         Variable<Array<Vector>> builderNodePositionsVar = new Variable<>(17, "BuilderNodePositions");
 
         // Variable value definition
-        Array<Vector> builderNodePositionsVarValue = new Array<>(3);
-        builderNodePositionsVarValue.add(new Vector(-16.004, 0.35, -15.965));
-        builderNodePositionsVarValue.add(new Vector(-15.994, 0.35, -0.043));
-        builderNodePositionsVarValue.add(new Vector(-15.981, 0.35, 15.908));
-        builderNodePositionsVar.setValue(builderNodePositionsVarValue);
-
-        // Variables block
-        VariableBlock variableBlock = new VariableBlock();
-        variableBlock.addGlobal(builderNodePositionsVar);
-
-        // Actions block
-        ActionBlock actionBlock = new ActionBlock();
-        actionBlock.add(builderNodePositionsVar);
+        Array<Vector> builderNodePositionsValue = new Array<>(3);
+        builderNodePositionsValue.add(new Vector(-16.004, 0.35, -15.965));
+        builderNodePositionsValue.add(new Vector(-15.994, 0.35, -0.043));
+        builderNodePositionsValue.add(new Vector(-15.981, 0.35, 15.908));
+        builderNodePositionsVar.setValue(builderNodePositionsValue);
 
         // Build final code snippet of the workshop's rule
-        RuleActionCodeSnippet codeSnippet = new RuleActionCodeSnippet(variableBlock, actionBlock);
+        RuleActionCodeSnippet codeSnippet = new RuleActionCodeSnippet();
+        codeSnippet.addGlobal(builderNodePositionsVar);
 
         // When
         String actualResult = codeSnippet.toString();
@@ -79,26 +72,19 @@ public class RuleActionCodeSnippetTest
             "}";
 
         // Variable type declaration
-        Variable<Array<Array<Integer>>> BuilderNodeConnectionsVar = new Variable<>(18, "BuilderNodeConnections");
+        Variable<Array<Array<Integer>>> builderNodeConnectionsVar = new Variable<>(18, "BuilderNodeConnections");
 
         // Variable value definition
-        Array<Array<Integer>> BuilderNodeConnectionsVarValue = new Array<>(3);
-        BuilderNodeConnectionsVarValue.add(new Array<>(5, 1, 6));
-        BuilderNodeConnectionsVarValue.add(new Array<>(0, 2));
-        BuilderNodeConnectionsVarValue.add(new Array<>(3, 1));
-        BuilderNodeConnectionsVarValue.add(new Array<>(2, 6, 4, 1, 5));
-        BuilderNodeConnectionsVar.setValue(BuilderNodeConnectionsVarValue);
-
-        // Variables block
-        VariableBlock variableBlock = new VariableBlock();
-        variableBlock.addGlobal(BuilderNodeConnectionsVar);
-
-        // Actions block
-        ActionBlock actionBlock = new ActionBlock();
-        actionBlock.add(BuilderNodeConnectionsVar);
+        Array<Array<Integer>> builderNodeConnectionsValue = new Array<>(3);
+        builderNodeConnectionsValue.add(new Array<>(5, 1, 6));
+        builderNodeConnectionsValue.add(new Array<>(0, 2));
+        builderNodeConnectionsValue.add(new Array<>(3, 1));
+        builderNodeConnectionsValue.add(new Array<>(2, 6, 4, 1, 5));
+        builderNodeConnectionsVar.setValue(builderNodeConnectionsValue);
 
         // Build final code snippet of the workshop's rule
-        RuleActionCodeSnippet codeSnippet = new RuleActionCodeSnippet(variableBlock, actionBlock);
+        RuleActionCodeSnippet codeSnippet = new RuleActionCodeSnippet();
+        codeSnippet.addGlobal(builderNodeConnectionsVar);
 
         // When
         String actualResult = codeSnippet.toString();
@@ -134,31 +120,22 @@ public class RuleActionCodeSnippetTest
 
         // Variable type declaration
         Variable<Array<Vector>> builderNodePositionsVar = new Variable<>(17, "BuilderNodePositions");
-        Variable<Array<Array<Integer>>> BuilderNodeConnectionsVar = new Variable<>(18, "BuilderNodeConnections");
+        Variable<Array<Array<Integer>>> builderNodeConnectionsVar = new Variable<>(18, "BuilderNodeConnections");
 
         // Variable value definition
-        Array<Vector> builderNodePositionsVarValue = new Array<>(3);
-        builderNodePositionsVarValue.add(new Vector(-15.994, 0.35, -0.043));
-        builderNodePositionsVarValue.add(new Vector(-15.981, 0.35, 15.908));
-        builderNodePositionsVar.setValue(builderNodePositionsVarValue);
+        Array<Vector> builderNodePositionsValue = new Array<>(3);
+        builderNodePositionsValue.add(new Vector(-15.994, 0.35, -0.043));
+        builderNodePositionsValue.add(new Vector(-15.981, 0.35, 15.908));
+        builderNodePositionsVar.setValue(builderNodePositionsValue);
 
-        Array<Array<Integer>> BuilderNodeConnectionsVarValue = new Array<>(3);
-        BuilderNodeConnectionsVarValue.add(new Array<>(3, 1));
-        BuilderNodeConnectionsVarValue.add(new Array<>(2, 6, 4, 1, 5));
-        BuilderNodeConnectionsVar.setValue(BuilderNodeConnectionsVarValue);
-
-        // Variables block
-        VariableBlock variableBlock = new VariableBlock();
-        variableBlock.addGlobal(builderNodePositionsVar);
-        variableBlock.addGlobal(BuilderNodeConnectionsVar);
-
-        // Actions block
-        ActionBlock actionBlock = new ActionBlock();
-        actionBlock.add(builderNodePositionsVar);
-        actionBlock.add(BuilderNodeConnectionsVar);
+        Array<Array<Integer>> builderNodeConnectionsValue = new Array<>(3);
+        builderNodeConnectionsValue.add(new Array<>(3, 1));
+        builderNodeConnectionsValue.add(new Array<>(2, 6, 4, 1, 5));
+        builderNodeConnectionsVar.setValue(builderNodeConnectionsValue);
 
         // Build final code snippet of the workshop's rule
-        RuleActionCodeSnippet codeSnippet = new RuleActionCodeSnippet(variableBlock, actionBlock);
+        RuleActionCodeSnippet codeSnippet = new RuleActionCodeSnippet();
+        codeSnippet.addGlobals(builderNodePositionsVar, builderNodeConnectionsVar);
 
         // When
         String actualResult = codeSnippet.toString();

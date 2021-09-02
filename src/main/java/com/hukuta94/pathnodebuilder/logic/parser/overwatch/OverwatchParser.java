@@ -85,39 +85,15 @@ public class OverwatchParser
 
     public RuleActionCodeSnippet parseInputData(String inputString) throws Exception
     {
-        VariableBlock variableBlock = parseVariablesBlock(inputString);
-        ActionBlock actionBlock = new ActionBlock();
-
-        parseInputVarArray(
-            inputString,
-            INPUT_VAR_POSITIONS_NAME,
-            variableBlock.getGlobalByName(INPUT_VAR_POSITIONS_NAME).getIndex(),
-            actionBlock,
-            this::nodePositionItemProcessor
-        );
-
-        parseInputVarArray(
-            inputString,
-            INPUT_VAR_CONNECTIONS_NAME,
-            variableBlock.getGlobalByName(INPUT_VAR_CONNECTIONS_NAME).getIndex(),
-            actionBlock,
-            this::nodeConnectionItemProcessor
-        );
-
-        return new RuleActionCodeSnippet(variableBlock, actionBlock);
-    }
-
-    private VariableBlock parseVariablesBlock(String inputString) throws Exception
-    {
         // Try find input vars in string
         Matcher matcher = PATTERN_INPUT_VARS_EXIST.matcher(inputString);
         if (!matcher.find())
         {
             throw new Exception("Input string does not contain input data variables '" +
-                INPUT_VAR_POSITIONS_NAME + "' and/or '" + INPUT_VAR_CONNECTIONS_NAME + "'");
+                    INPUT_VAR_POSITIONS_NAME + "' and/or '" + INPUT_VAR_CONNECTIONS_NAME + "'");
         }
 
-        VariableBlock variableBlock = new VariableBlock();
+        RuleActionCodeSnippet codeSnippet = new RuleActionCodeSnippet();
 
         // Input vars exist in the global block
         if (matcher.group(GROUP_VARS).equals("global:"))
@@ -129,19 +105,30 @@ public class OverwatchParser
 
                 // This string has format "X: VarName", X - number in range from 0 to 127
                 String[] varParts = var.split("\\s*\\:\\s*");
-                Variable<Array> variable = new Variable<>(Integer.parseInt(varParts[0]), varParts[1]);
-                variableBlock.addGlobal(variable);
+
+                Integer varIndex = Integer.parseInt(varParts[0]);
+                String varName = varParts[1];
+
+                parseInputVarArray(
+                        inputString,
+                        varName,
+                        varIndex,
+                        codeSnippet,
+                        varName.equals(INPUT_VAR_POSITIONS_NAME)
+                            ? this::nodePositionItemProcessor
+                            : this::nodeConnectionItemProcessor
+                );
             }
         }
 
-        return variableBlock;
+        return codeSnippet;
     }
 
     private <T> void parseInputVarArray(
             String inputString,
             String inputVarName,
             Integer inputVarIndex,
-            ActionBlock actionBlock,
+            RuleActionCodeSnippet codeSnippet,
             Function<String, T> arrayItemProcessor)
     {
         // Extract from var the array with items
@@ -176,8 +163,7 @@ public class OverwatchParser
                 }
             }
 
-            Variable<Array> variable = new Variable<>(inputVarIndex, inputVarName, array);
-            actionBlock.add(variable);
+            codeSnippet.addGlobal(new Variable<Array>(inputVarIndex, inputVarName, array));
         }
     }
 
