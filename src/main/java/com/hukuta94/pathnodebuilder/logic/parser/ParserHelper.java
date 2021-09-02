@@ -22,6 +22,7 @@ public class ParserHelper
                 if (fileName.equals("inputData"))
                 {
                     testFileName = fileName;
+                    break;
                 }
             }
         }
