@@ -23,15 +23,15 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class RuleActionCodeSnippet
 {
-    private final Variables variables;
-    private final Actions actions;
+    private final VariableBlock variableBlock;
+    private final ActionBlock actionBlock;
 
     @Override
     public String toString()
     {
         return
-            variables.toString() +
+            variableBlock.toString() +
             "\n\n" +
-            actions.toString();
+            actionBlock.toString();
     }
 }

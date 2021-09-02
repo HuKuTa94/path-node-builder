@@ -1,6 +1,7 @@
 package com.hukuta94.pathnodebuilder.logic.parser.overwatch;
 
 import com.hukuta94.pathnodebuilder.logic.parser.overwatch.model.Constants;
+import com.hukuta94.pathnodebuilder.logic.parser.overwatch.model.Variable;
 
 import java.util.regex.Pattern;
 

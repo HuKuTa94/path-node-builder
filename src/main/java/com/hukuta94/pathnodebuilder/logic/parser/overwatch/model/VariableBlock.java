@@ -1,7 +1,5 @@
 package com.hukuta94.pathnodebuilder.logic.parser.overwatch.model;
 
-import com.hukuta94.pathnodebuilder.logic.parser.overwatch.Validator;
-
 import java.util.Map;
 import java.util.HashMap;
 
@@ -19,42 +17,69 @@ import java.util.HashMap;
  * }
  */
 
-public class Variables
+public class VariableBlock
 {
     /**
      * Global vars that can be accessed from any rule (global or player)
      */
-    private HashMap<Integer, String> global;
+    private HashMap<Integer, Variable> global;
 
     /**
      * Player vars that can be accessed from the player only
      */
-    private HashMap<Integer, String> player;
+    private HashMap<Integer, Variable> player;
 
-    public Variables()
+    public VariableBlock()
     {
         global = new HashMap<>();
         player = new HashMap<>();
     }
 
     /**
-     * Adds new global variable at index
+     * Adds new global variable
+     * @param variable instance
+     */
+    public void addGlobal(Variable variable)
+    {
+        global.put(variable.getIndex(), variable);
+    }
+
+    /** Gets global var by index
      * @param index from 0 to 127
      */
-    public void addGlobal(Integer index, String variableName)
+    public Variable getGlobalByIndex(Integer index)
     {
-        Validator.validateVariable(index, variableName);
-        global.put(index, variableName);
+        return global.get(index);
     }
 
     /**
-     * Adds new player variable at index
-     * @param index from 0 to 127
+     * Gets global var by variable name
+     * @param variableName
      */
-    public void addPlayer(Integer index, String variableName)
+    public Variable getGlobalByName(String variableName)
     {
-        Validator.validateVariable(index, variableName);
-        player.put(index, variableName);
+        return global.values().stream()
+                .filter(variable -> variable.getName().equals(variableName))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * Adds new player variable
+     * @param variable instance
+     */
+    public void addPlayer(Variable variable)
+    {
+        player.put(variable.getIndex(), variable);
+    }
+
+    /** Gets player var by index
+     * @param index from 0 to 127
+     * @return
+     */
+    public Variable getPlayerByIndex(Integer index)
+    {
+        return player.get(index);
     }
 
     @Override
@@ -81,14 +106,14 @@ public class Variables
         return builder.toString();
     }
 
-    private void appendVariables(StringBuilder builder, HashMap<Integer, String> variables)
+    private void appendVariables(StringBuilder builder, HashMap<Integer, Variable> variables)
     {
-        for (Map.Entry<Integer, String> entry: variables.entrySet())
+        for (Map.Entry<Integer, Variable> entry: variables.entrySet())
         {
             builder.append("\t\t");
             builder.append(entry.getKey());
             builder.append(": ");
-            builder.append(entry.getValue());
+            builder.append(entry.getValue().getName());
             builder.append("\n");
         }
     }

@@ -2,7 +2,8 @@ package com.hukuta94.pathnodebuilder.logic.parser.overwatch;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class ValidatorTest
 {
@@ -11,12 +12,12 @@ public class ValidatorTest
     void badIndexTest()
     {
         // Then
-        Assertions.assertThrows(IllegalArgumentException.class, () -> Validator.validateVariable(-1, "varName"));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> Validator.validateVariable(128, "varName"));
-        Assertions.assertDoesNotThrow(() -> Validator.validateVariable(0, "varName"));
-        Assertions.assertDoesNotThrow(() -> Validator.validateVariable(127, "varName"));
-        Assertions.assertDoesNotThrow(() -> Validator.validateVariable(1, "varName"));
-        Assertions.assertDoesNotThrow(() -> Validator.validateVariable(126, "varName"));
+        assertThrows(IllegalArgumentException.class, () -> Validator.validateVariable(-1, "varName"));
+        assertThrows(IllegalArgumentException.class, () -> Validator.validateVariable(128, "varName"));
+        assertDoesNotThrow(() -> Validator.validateVariable(0, "varName"));
+        assertDoesNotThrow(() -> Validator.validateVariable(127, "varName"));
+        assertDoesNotThrow(() -> Validator.validateVariable(1, "varName"));
+        assertDoesNotThrow(() -> Validator.validateVariable(126, "varName"));
     }
 
     @Test
@@ -24,13 +25,13 @@ public class ValidatorTest
     void badVariableNameTest()
     {
         // Then
-        Assertions.assertDoesNotThrow(() -> Validator.validateVariable(0, "Abc"));
-        Assertions.assertDoesNotThrow(() -> Validator.validateVariable(0, "_Abc"));
-        Assertions.assertDoesNotThrow(() -> Validator.validateVariable(0, "Abc123"));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> Validator.validateVariable(0, "1Abc"));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> Validator.validateVariable(0, "Ab-c"));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> Validator.validateVariable(0, "Abc%!^"));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> Validator.validateVariable(0, "Abc12ab%!"));
+        assertDoesNotThrow(() -> Validator.validateVariable(0, "Abc"));
+        assertDoesNotThrow(() -> Validator.validateVariable(0, "_Abc"));
+        assertDoesNotThrow(() -> Validator.validateVariable(0, "Abc123"));
+        assertThrows(IllegalArgumentException.class, () -> Validator.validateVariable(0, "1Abc"));
+        assertThrows(IllegalArgumentException.class, () -> Validator.validateVariable(0, "Ab-c"));
+        assertThrows(IllegalArgumentException.class, () -> Validator.validateVariable(0, "Abc%!^"));
+        assertThrows(IllegalArgumentException.class, () -> Validator.validateVariable(0, "Abc12ab%!"));
     }
 
     @Test
@@ -43,9 +44,9 @@ public class ValidatorTest
         String varName33Symbols = "qwertyuiopasdfghjklzxcvbnmqwert33";
 
         // Then
-        Assertions.assertDoesNotThrow(() -> Validator.validateVariable(0, varName31Symbols));
-        Assertions.assertDoesNotThrow(() -> Validator.validateVariable(127, varName32Symbols));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> Validator.validateVariable(0, varName33Symbols));
+        assertDoesNotThrow(() -> Validator.validateVariable(0, varName31Symbols));
+        assertDoesNotThrow(() -> Validator.validateVariable(127, varName32Symbols));
+        assertThrows(IllegalArgumentException.class, () -> Validator.validateVariable(0, varName33Symbols));
     }
 
     @Test
@@ -53,8 +54,8 @@ public class ValidatorTest
     void variableNameIsNotNullTest()
     {
         // Then
-        Assertions.assertDoesNotThrow(() -> Validator.validateVariable(0, "varName"));
-        Assertions.assertThrows(NullPointerException.class, () -> Validator.validateVariable(0, null));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> Validator.validateVariable(0, ""));
+        assertDoesNotThrow(() -> Validator.validateVariable(0, "varName"));
+        assertThrows(NullPointerException.class, () -> Validator.validateVariable(0, null));
+        assertThrows(IllegalArgumentException.class, () -> Validator.validateVariable(0, ""));
     }
 }

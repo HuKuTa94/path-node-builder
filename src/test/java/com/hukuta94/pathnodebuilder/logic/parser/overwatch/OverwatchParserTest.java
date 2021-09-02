@@ -2,11 +2,12 @@ package com.hukuta94.pathnodebuilder.logic.parser.overwatch;
 
 import com.hukuta94.pathnodebuilder.logic.parser.ParserHelper;
 import com.hukuta94.pathnodebuilder.logic.parser.overwatch.model.*;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class OverwatchParserTest
@@ -19,41 +20,48 @@ public class OverwatchParserTest
     void parseInputDataTest() throws Exception
     {
         // Given
+        // Variable type declaration
+        Variable<Array<Vector>> builderNodePositionsVar = new Variable<>(17, "BuilderNodePositions");
+        Variable<Array<Array<Integer>>> BuilderNodeConnectionsVar = new Variable<>(18, "BuilderNodeConnections");
+
+        // Variable value definition
+        Array<Vector> builderNodePositionsVarValue = new Array<>(10);
+        builderNodePositionsVarValue.add(new Vector(-16.004, 0.35, -15.965));
+        builderNodePositionsVarValue.add(new Vector(-15.994, 0.35, -0.043));
+        builderNodePositionsVarValue.add(new Vector(-15.981, 0.35, 15.908));
+        builderNodePositionsVarValue.add(new Vector(15.941, 0.35, 16.021));
+        builderNodePositionsVarValue.add(new Vector(15.98 , 0.35, -15.878));
+        builderNodePositionsVarValue.add(new Vector(-1.423, 0.35, -16.035));
+        builderNodePositionsVarValue.add(new Vector(-1.225, 0.35, 4.747));
+        builderNodePositionsVarValue.add(new Vector(7.259, 0.35, -0.358));
+        builderNodePositionsVarValue.add(null);
+        builderNodePositionsVarValue.add(new Vector(-7.908, 0.425, 10.12));
+        builderNodePositionsVar.setValue(builderNodePositionsVarValue);
+
+        Array<Array<Integer>> BuilderNodeConnectionsVarValue = new Array<>(9);
+        BuilderNodeConnectionsVarValue.add(new Array<>(5, 1, 6));
+        BuilderNodeConnectionsVarValue.add(new Array<>(0, 2));
+        BuilderNodeConnectionsVarValue.add(new Array<>(3, 1));
+        BuilderNodeConnectionsVarValue.add(new Array<>(2, 6, 4));
+        BuilderNodeConnectionsVarValue.add(new Array<>(5, 3, 7));
+        BuilderNodeConnectionsVarValue.add(new Array<>(4, 0, 7));
+        BuilderNodeConnectionsVarValue.add(new Array<>(0, 3, 7));
+        BuilderNodeConnectionsVarValue.add(new Array<>(6, 5, 4));
+        BuilderNodeConnectionsVarValue.add(null);
+        BuilderNodeConnectionsVar.setValue(BuilderNodeConnectionsVarValue);
+
         // Variables block
-        Variables vars = new Variables();
-        vars.addGlobal(125, "NodePositions");
-        vars.addGlobal(126, "NodeConnections");
+        VariableBlock variableBlock = new VariableBlock();
+        variableBlock.addGlobal(builderNodePositionsVar);
+        variableBlock.addGlobal(BuilderNodeConnectionsVar);
 
         // Actions block
-        // Node positions as array of vectors
-        Array<Vector> nodePositions = new Array<>(1);
-        nodePositions.add(new Vector(-16.004, 0.35, -15.965));
-        nodePositions.add(new Vector(-15.994, 0.35, -0.043));
-        nodePositions.add(new Vector(-15.981, 0.35, 15.908));
-        nodePositions.add(new Vector(15.941, 0.35, 16.021));
-        nodePositions.add(new Vector(15.98 , 0.35, -15.878));
-        nodePositions.add(new Vector(-1.423, 0.35, -16.035));
-        nodePositions.add(new Vector(-1.225, 0.35, 4.747));
-        nodePositions.add(new Vector(7.259, 0.35, -0.358));
-        nodePositions.add(new Vector(-7.908, 0.425, 10.12));
-
-        // Node connections as 2D array
-        Array<Array> nodeConnections = new Array<>(8);
-        nodeConnections.add(new Array<>(5, 1, 6));
-        nodeConnections.add(new Array<>(0, 2));
-        nodeConnections.add(new Array<>(3, 1));
-        nodeConnections.add(new Array<>(2, 6, 4));
-        nodeConnections.add(new Array<>(5, 3, 7));
-        nodeConnections.add(new Array<>(4, 0, 7));
-        nodeConnections.add(new Array<>(0, 3, 7));
-        nodeConnections.add(new Array<>(6, 5, 4));
-
-        Actions actions = new Actions();
-        actions.add(new Variable<>(125, "NodePositions", nodePositions));
-        actions.add(new Variable<>(126, "NodeConnections", nodeConnections));
+        ActionBlock actionBlock = new ActionBlock();
+        actionBlock.add(builderNodePositionsVar);
+        actionBlock.add(BuilderNodeConnectionsVar);
 
         // Build final code snippet of the workshop's rule
-        RuleActionCodeSnippet expectedResult = new RuleActionCodeSnippet(vars, actions);
+        RuleActionCodeSnippet expectedResult = new RuleActionCodeSnippet(variableBlock, actionBlock);
 
         String inputString = ParserHelper.loadTestFile("overwatch/1/", null);
 
@@ -61,6 +69,6 @@ public class OverwatchParserTest
         RuleActionCodeSnippet actualResult = overwatchParser.parseInputData(inputString);
 
         // Then
-        Assertions.assertEquals(expectedResult.toString(), actualResult.toString());
+        assertEquals(expectedResult.toString(), actualResult.toString());
     }
 }

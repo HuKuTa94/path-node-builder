@@ -2,7 +2,8 @@ package com.hukuta94.pathnodebuilder.logic.parser.overwatch.model;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Assertions;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RuleActionCodeSnippetTest
 {
@@ -27,27 +28,32 @@ public class RuleActionCodeSnippetTest
             "\t\t\tVector(-15.981, 0.35, 15.908));\n" +
             "}";
 
+        // Variable type declaration
+        Variable<Array<Vector>> builderNodePositionsVar = new Variable<>(17, "BuilderNodePositions");
+
+        // Variable value definition
+        Array<Vector> builderNodePositionsVarValue = new Array<>(3);
+        builderNodePositionsVarValue.add(new Vector(-16.004, 0.35, -15.965));
+        builderNodePositionsVarValue.add(new Vector(-15.994, 0.35, -0.043));
+        builderNodePositionsVarValue.add(new Vector(-15.981, 0.35, 15.908));
+        builderNodePositionsVar.setValue(builderNodePositionsVarValue);
+
         // Variables block
-        Variables vars = new Variables();
-        vars.addGlobal(17, "BuilderNodePositions");
+        VariableBlock variableBlock = new VariableBlock();
+        variableBlock.addGlobal(builderNodePositionsVar);
 
         // Actions block
-        Array<Vector> array = new Array<>(3);
-        array.add(new Vector(-16.004, 0.35, -15.965));
-        array.add(new Vector(-15.994, 0.35, -0.043));
-        array.add(new Vector(-15.981, 0.35, 15.908));
-
-        Actions actions = new Actions();
-        actions.add(new Variable<>(17, "BuilderNodePositions", array));
+        ActionBlock actionBlock = new ActionBlock();
+        actionBlock.add(builderNodePositionsVar);
 
         // Build final code snippet of the workshop's rule
-        RuleActionCodeSnippet codeSnippet = new RuleActionCodeSnippet(vars, actions);
+        RuleActionCodeSnippet codeSnippet = new RuleActionCodeSnippet(variableBlock, actionBlock);
 
         // When
         String actualResult = codeSnippet.toString();
 
         // Then
-        Assertions.assertEquals(expectedResult, actualResult);
+        assertEquals(expectedResult, actualResult);
     }
 
     @Test
@@ -72,28 +78,33 @@ public class RuleActionCodeSnippetTest
             "\t\t\tArray(2, 6, 4, 1, 5));\n" +
             "}";
 
+        // Variable type declaration
+        Variable<Array<Array<Integer>>> BuilderNodeConnectionsVar = new Variable<>(18, "BuilderNodeConnections");
+
+        // Variable value definition
+        Array<Array<Integer>> BuilderNodeConnectionsVarValue = new Array<>(3);
+        BuilderNodeConnectionsVarValue.add(new Array<>(5, 1, 6));
+        BuilderNodeConnectionsVarValue.add(new Array<>(0, 2));
+        BuilderNodeConnectionsVarValue.add(new Array<>(3, 1));
+        BuilderNodeConnectionsVarValue.add(new Array<>(2, 6, 4, 1, 5));
+        BuilderNodeConnectionsVar.setValue(BuilderNodeConnectionsVarValue);
+
         // Variables block
-        Variables vars = new Variables();
-        vars.addGlobal(18, "BuilderNodeConnections");
+        VariableBlock variableBlock = new VariableBlock();
+        variableBlock.addGlobal(BuilderNodeConnectionsVar);
 
         // Actions block
-        Array<Array> array = new Array<>(3);
-        array.add(new Array<>(5, 1, 6));
-        array.add(new Array<>(0, 2));
-        array.add(new Array<>(3, 1));
-        array.add(new Array<>(2, 6, 4, 1, 5));
-
-        Actions actions = new Actions();
-        actions.add(new Variable<>(18, "BuilderNodeConnections", array));
+        ActionBlock actionBlock = new ActionBlock();
+        actionBlock.add(BuilderNodeConnectionsVar);
 
         // Build final code snippet of the workshop's rule
-        RuleActionCodeSnippet codeSnippet = new RuleActionCodeSnippet(vars, actions);
+        RuleActionCodeSnippet codeSnippet = new RuleActionCodeSnippet(variableBlock, actionBlock);
 
         // When
         String actualResult = codeSnippet.toString();
 
         // Then
-        Assertions.assertEquals(expectedResult, actualResult);
+        assertEquals(expectedResult, actualResult);
     }
 
     @Test
@@ -121,31 +132,38 @@ public class RuleActionCodeSnippetTest
             "\t\t\tArray(2, 6, 4, 1, 5));\n" +
             "}";
 
+        // Variable type declaration
+        Variable<Array<Vector>> builderNodePositionsVar = new Variable<>(17, "BuilderNodePositions");
+        Variable<Array<Array<Integer>>> BuilderNodeConnectionsVar = new Variable<>(18, "BuilderNodeConnections");
+
+        // Variable value definition
+        Array<Vector> builderNodePositionsVarValue = new Array<>(3);
+        builderNodePositionsVarValue.add(new Vector(-15.994, 0.35, -0.043));
+        builderNodePositionsVarValue.add(new Vector(-15.981, 0.35, 15.908));
+        builderNodePositionsVar.setValue(builderNodePositionsVarValue);
+
+        Array<Array<Integer>> BuilderNodeConnectionsVarValue = new Array<>(3);
+        BuilderNodeConnectionsVarValue.add(new Array<>(3, 1));
+        BuilderNodeConnectionsVarValue.add(new Array<>(2, 6, 4, 1, 5));
+        BuilderNodeConnectionsVar.setValue(BuilderNodeConnectionsVarValue);
+
         // Variables block
-        Variables vars = new Variables();
-        vars.addGlobal(17, "BuilderNodePositions");
-        vars.addGlobal(18, "BuilderNodeConnections");
+        VariableBlock variableBlock = new VariableBlock();
+        variableBlock.addGlobal(builderNodePositionsVar);
+        variableBlock.addGlobal(BuilderNodeConnectionsVar);
 
         // Actions block
-        Array<Vector> array1D = new Array<>(1);
-        array1D.add(new Vector(-15.994, 0.35, -0.043));
-        array1D.add(new Vector(-15.981, 0.35, 15.908));
-
-        Array<Array> array2D = new Array<>(2);
-        array2D.add(new Array<>(3, 1));
-        array2D.add(new Array<>(2, 6, 4, 1, 5));
-
-        Actions actions = new Actions();
-        actions.add(new Variable<>(17, "BuilderNodePositions", array1D));
-        actions.add(new Variable<>(18, "BuilderNodeConnections", array2D));
+        ActionBlock actionBlock = new ActionBlock();
+        actionBlock.add(builderNodePositionsVar);
+        actionBlock.add(BuilderNodeConnectionsVar);
 
         // Build final code snippet of the workshop's rule
-        RuleActionCodeSnippet codeSnippet = new RuleActionCodeSnippet(vars, actions);
+        RuleActionCodeSnippet codeSnippet = new RuleActionCodeSnippet(variableBlock, actionBlock);
 
         // When
         String actualResult = codeSnippet.toString();
 
         // Then
-        Assertions.assertEquals(expectedResult, actualResult);
+        assertEquals(expectedResult, actualResult);
     }
 }
