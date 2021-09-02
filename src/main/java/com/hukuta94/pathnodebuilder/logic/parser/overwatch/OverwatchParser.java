@@ -92,7 +92,7 @@ public class OverwatchParser
             inputString,
             INPUT_VAR_POSITIONS_NAME,
             variableBlock.getGlobalByName(INPUT_VAR_POSITIONS_NAME).getIndex(),
-                actionBlock,
+            actionBlock,
             this::nodePositionItemProcessor
         );
 
@@ -100,7 +100,7 @@ public class OverwatchParser
             inputString,
             INPUT_VAR_CONNECTIONS_NAME,
             variableBlock.getGlobalByName(INPUT_VAR_CONNECTIONS_NAME).getIndex(),
-                actionBlock,
+            actionBlock,
             this::nodeConnectionItemProcessor
         );
 
