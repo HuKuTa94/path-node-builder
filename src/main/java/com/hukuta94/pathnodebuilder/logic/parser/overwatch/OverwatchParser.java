@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hukuta94.pathnodebuilder.logic.parser.overwatch.model.*;
+import com.hukuta94.pathnodebuilder.domain.model.Vector;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,7 +34,7 @@ public class OverwatchParser
     private static Pattern PATTERN_VAR_CONNECTIONS_ARRAY;
 
     private static final Pattern PATTERN_SPLIT_VECTOR_TO_COORDS = Pattern.compile(
-            "(?<x>\\-?\\d+\\.?\\d+)\\s*\\,\\s*(?<y>\\-?\\d+\\.?\\d+)\\s*\\,\\s*(?<z>\\-?\\d+\\.?\\d+)");
+            "(?<x>\\-?\\d+(\\.\\d+)?)\\s*\\,\\s*(?<y>\\-?\\d+(\\.?\\d+)?)\\s*\\,\\s*(?<z>\\-?\\d+(\\.?\\d+)?)");
 
     private static final String REGEX_CAPTURE_ARRAY_WITH_ITEMS = "(?: ?\\G|^\\s*Global\\.%s\\s*=\\s*)(?:Array\\()(?<%s>[aA-zZ,\\(\\-0-9\\.\\s\\)]+)";
     private static final String REGEX_EXTRACT_ITEMS_FROM_ARRAY = "\\,\\s*(?=F|A|V)";
