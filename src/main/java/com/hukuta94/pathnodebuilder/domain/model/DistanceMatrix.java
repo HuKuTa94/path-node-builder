@@ -1,7 +1,6 @@
 package com.hukuta94.pathnodebuilder.domain.model;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Distance matrix of the unit-edge graph
