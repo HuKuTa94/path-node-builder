@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hukuta94.pathnodebuilder.logic.parser.overwatch.model.*;
-import com.hukuta94.pathnodebuilder.domain.model.Vector;
+import com.hukuta94.pathnodebuilder.common.types.Vector;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

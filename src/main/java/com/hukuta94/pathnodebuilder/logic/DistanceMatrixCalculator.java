@@ -1,7 +1,7 @@
 package com.hukuta94.pathnodebuilder.logic;
 
-import com.hukuta94.pathnodebuilder.domain.model.Vector;
-import com.hukuta94.pathnodebuilder.domain.util.Tuple;
+import com.hukuta94.pathnodebuilder.common.types.Vector;
+import com.hukuta94.pathnodebuilder.common.types.Tuple;
 import org.springframework.stereotype.Component;
 
 import java.util.*;

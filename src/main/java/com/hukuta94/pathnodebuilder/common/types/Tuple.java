@@ -1,4 +1,4 @@
-package com.hukuta94.pathnodebuilder.domain.util;
+package com.hukuta94.pathnodebuilder.common.types;
 
 import lombok.Getter;
 import lombok.Setter;
