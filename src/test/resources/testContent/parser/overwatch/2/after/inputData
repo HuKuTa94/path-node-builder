@@ -1,0 +1,39 @@
+variables
+{
+	global:
+		125: NodePositions
+		126: NodeConnections
+		127: DistanceMatrix
+}
+actions
+{
+	Global.NodePositions =
+		Array(
+			Vector(-16.004, 0.35, -15.965),
+			Vector(-15.994, 0.35, -0.043),
+			Vector(-15.981, 0.35, 15.908),
+			Vector(15.941, 0.35, 16.021),
+			Vector(15.98, 0.35, -15.878),
+			Vector(-1.423, 0.35, -16.035),
+			Vector(-1.225, 0.35, 4.747),
+			Vector(7.259, 0.35, -0.358));
+	Global.NodeConnections =
+		Array(
+			Array(5, 1, 6),
+			Array(0, 2),
+			Array(3, 1),
+			Array(2, 6, 4),
+			Array(5, 3, 7),
+			Array(4, 0, 7),
+			Array(0, 3, 7),
+			Array(6, 5, 4));
+	Global.DistanceMatrix =
+		Array(
+			Array(1, 2, 2, 2, 1, 1, 2),
+			Array(1, 2, 3, 2, 2, 3),
+			Array(1, 2, 3, 2, 3),
+			Array(1, 2, 1, 2),
+			Array(1, 2, 1),
+			Array(2, 1),
+			Array(1));
+}
