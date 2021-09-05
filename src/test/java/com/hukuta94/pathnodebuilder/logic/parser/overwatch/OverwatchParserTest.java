@@ -1,7 +1,8 @@
 package com.hukuta94.pathnodebuilder.logic.parser.overwatch;
 
+import com.hukuta94.pathnodebuilder.common.types.Tuple;
+import com.hukuta94.pathnodebuilder.common.types.Vector;
 import com.hukuta94.pathnodebuilder.logic.parser.ParserHelper;
-import com.hukuta94.pathnodebuilder.logic.parser.overwatch.model.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,51 +16,125 @@ public class OverwatchParserTest
     @Autowired
     private OverwatchParser overwatchParser;
 
+    private void assertPositionArrays(Vector[] expected, Vector[] actual)
+    {
+        for (int i = 0; i < actual.length; i++)
+        {
+            // Ignore nullable elements
+            if (expected[i] == null) {
+                break;
+            }
+
+            assertEquals(expected[i].getX(), actual[i].getX());
+            assertEquals(expected[i].getY(), actual[i].getY());
+            assertEquals(expected[i].getZ(), actual[i].getZ());
+        }
+    }
+
+    private void assertConnectionArrays(int[][] expected, int[][] actual)
+    {
+        // Connections
+        for (int i = 0; i < actual.length; i++)
+        {
+            // Ignore nullable elements
+            if (actual[i] == null) {
+                break;
+            }
+
+            for (int j = 0; j < actual[i].length; j++)
+            {
+                assertEquals(expected[i][j], actual[i][j]);
+            }
+        }
+    }
+
     @Test
     @DisplayName("Parse input data")
     void parseInputDataTest() throws Exception
     {
         // Given
-        // Variable type declaration
-        Variable<Array<Vector>> builderNodePositionsVar = new Variable<>(17, "BuilderNodePositions");
-        Variable<Array<Array<Integer>>> builderNodeConnectionsVar = new Variable<>(18, "BuilderNodeConnections");
+        Vector[] expectedPositions = new Vector[]
+            {
+                new Vector(-16.004, 0.350, -15.965),
+                new Vector(-15.994, 0.350, -0.043),
+                new Vector(-15.981, 0.350, 15.908),
+                new Vector(15.941, 0.350, 16.021),
+                new Vector(15.980, 0.350, -15.878),
+                new Vector(-1.423, 0.350, -16.035),
+                new Vector(-1.225, 0.350, 4.747),
+                null,
+                new Vector(7.259, 0.350, -0.358)
+            };
 
-        // Variable value definition
-        Array<Vector> builderNodePositionsValue = new Array<>(10);
-        builderNodePositionsValue.add(new Vector(-16.004, 0.35, -15.965));
-        builderNodePositionsValue.add(new Vector(-15.994, 0.35, -0.043));
-        builderNodePositionsValue.add(new Vector(-15.981, 0.35, 15.908));
-        builderNodePositionsValue.add(new Vector(15.941, 0.35, 16.021));
-        builderNodePositionsValue.add(new Vector(15.98 , 0.35, -15.878));
-        builderNodePositionsValue.add(new Vector(-1.423, 0.35, -16.035));
-        builderNodePositionsValue.add(new Vector(-1.225, 0.35, 4.747));
-        builderNodePositionsValue.add(new Vector(7.259, 0.35, -0.358));
-        builderNodePositionsValue.add(null);
-        builderNodePositionsValue.add(new Vector(-7.908, 0.425, 10.12));
-        builderNodePositionsVar.setValue(builderNodePositionsValue);
+        int[][] expectedConnections = new int[][]
+            {
+                {5, 1, 6},
+                {0, 2},
+                {3, 1},
+                {2, 6, 4},
+                {5, 3, 8},
+                {4, 0, 8},
+                {0, 3, 8},
+                null,
+                {6, 5, 4}
+            };
 
-        Array<Array<Integer>> builderNodeConnectionsValue = new Array<>(9);
-        builderNodeConnectionsValue.add(new Array<>(5, 1, 6));
-        builderNodeConnectionsValue.add(new Array<>(0, 2));
-        builderNodeConnectionsValue.add(new Array<>(3, 1));
-        builderNodeConnectionsValue.add(new Array<>(2, 6, 4));
-        builderNodeConnectionsValue.add(new Array<>(5, 3, 7));
-        builderNodeConnectionsValue.add(new Array<>(4, 0, 7));
-        builderNodeConnectionsValue.add(new Array<>(0, 3, 7));
-        builderNodeConnectionsValue.add(new Array<>(6, 5, 4));
-        builderNodeConnectionsValue.add(null);
-        builderNodeConnectionsVar.setValue(builderNodeConnectionsValue);
-
-        // Build final code snippet of the workshop's rule
-        RuleActionCodeSnippet expectedResult = new RuleActionCodeSnippet();
-        expectedResult.addGlobals(builderNodePositionsVar, builderNodeConnectionsVar);
-
-        String inputString = ParserHelper.loadTestFile("overwatch/1/", null);
+        String inputString = ParserHelper.loadTestFile("overwatch/2/before/", null);
 
         // When
-        RuleActionCodeSnippet actualResult = overwatchParser.parseInputData(inputString);
+        Tuple<Vector[], int[][]> actualResult = overwatchParser.parseInputData(inputString);
 
         // Then
-        assertEquals(expectedResult.toString(), actualResult.toString());
+        assertPositionArrays(expectedPositions, actualResult.getObjectA());
+        assertConnectionArrays(expectedConnections, actualResult.getObjectB());
+    }
+
+    @Test
+    @DisplayName("Parse output data")
+    void parseOutputDataTest() throws Exception
+    {
+        // Given
+        Vector[] outputPositions = new Vector[]
+                {
+                        new Vector(-16.004, 0.350, -15.965),
+                        new Vector(-15.994, 0.350, -0.043),
+                        new Vector(-15.981, 0.350, 15.908),
+                        new Vector(15.941, 0.350, 16.021),
+                        new Vector(15.980, 0.350, -15.878),
+                        new Vector(-1.423, 0.350, -16.035),
+                        new Vector(-1.225, 0.350, 4.747),
+                        new Vector(7.259, 0.350, -0.358)
+                };
+
+        int[][] outputConnections = new int[][]
+                {
+                        {5, 1, 6},
+                        {0, 2},
+                        {3, 1},
+                        {2, 6, 4},
+                        {5, 3, 7},
+                        {4, 0, 7},
+                        {0, 3, 7},
+                        {6, 5, 4}
+                };
+
+        int[][] distanceMatrix = new int[][]
+                {
+                        {1, 2, 2, 2, 1, 1, 2},
+                        {1, 2, 3, 2, 2, 3},
+                        {1, 2, 3, 2, 3},
+                        {1, 2, 1, 2},
+                        {1, 2, 1},
+                        {2, 1},
+                        {1},
+                };
+
+        String expectedResult = ParserHelper.loadTestFile("overwatch/2/after/", null);
+
+        // When
+        String actualResult = overwatchParser.parseOutputData(outputPositions, outputConnections, distanceMatrix);
+
+        // Then
+        assertEquals(expectedResult, actualResult);
     }
 }
