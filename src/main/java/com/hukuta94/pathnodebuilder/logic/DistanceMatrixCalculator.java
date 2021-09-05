@@ -21,9 +21,9 @@ public class DistanceMatrixCalculator
      * {3, 5, 6, 0}
      *
      * optimized matrix result (lazy algorithm):
-     * {0, 1, 2, 3}
-     * {0, 4, 5}
-     * {0, 6}
+     * {1, 2, 3}
+     * {4, 5}
+     * {6}
      *
      * @param size of the the first array
      * @param optimized true - fill upper part of the main diagonal only (matrix[x][y]). It can reduce used memory
@@ -125,6 +125,25 @@ public class DistanceMatrixCalculator
             }
         }
 
-        return distanceMatrix;
+        return optimized
+                ? deleteZerosInInnerArrays(distanceMatrix)
+                : distanceMatrix;
+    }
+
+    private int[][] deleteZerosInInnerArrays(int[][] distanceMatrix)
+    {
+        int[][] result = new int[distanceMatrix.length][];
+
+        // Don't copy the first 'zero' elements of inner arrays to the result
+        for (int i = 0; i < distanceMatrix.length; i++)
+        {
+            result[i] = new int[distanceMatrix[i].length - 1];
+            for (int j = 1; j < distanceMatrix[i].length; j++)
+            {
+                result[i][j - 1] = distanceMatrix[i][j];
+            }
+        }
+
+        return result;
     }
 }
