@@ -138,10 +138,9 @@ public class DistanceMatrixCalculator
         for (int i = 0; i < distanceMatrix.length; i++)
         {
             result[i] = new int[distanceMatrix[i].length - 1];
-            for (int j = 1; j < distanceMatrix[i].length; j++)
-            {
-                result[i][j - 1] = distanceMatrix[i][j];
-            }
+
+            if (distanceMatrix[i].length - 1 >= 0)
+                System.arraycopy(distanceMatrix[i], 1, result[i], 0, distanceMatrix[i].length - 1);
         }
 
         return result;
