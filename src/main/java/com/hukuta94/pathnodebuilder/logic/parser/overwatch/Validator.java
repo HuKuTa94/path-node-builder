@@ -1,12 +1,12 @@
 package com.hukuta94.pathnodebuilder.logic.parser.overwatch;
 
-import com.hukuta94.pathnodebuilder.logic.parser.overwatch.model.Constants;
-import com.hukuta94.pathnodebuilder.logic.parser.overwatch.model.Variable;
-
 import java.util.regex.Pattern;
 
 public abstract class Validator
 {
+    public static final int NAME_FIELD_MAX_LENGTH = 32;
+    public static final String NAME_FIELD_REGEX = "^([a-zA-Z_][a-zA-Z0-9_]+)$";
+
     private static final int INDEX_LOW = 0;
     private static final int INDEX_HIGH = 127;
 
@@ -29,11 +29,11 @@ public abstract class Validator
             throw new NullPointerException("Name can't be null");
         }
 
-        if (nameField.length() == 0 || nameField.length() > Constants.NAME_FIELD_MAX_LENGTH) {
+        if (nameField.length() == 0 || nameField.length() > NAME_FIELD_MAX_LENGTH) {
             throw new IllegalArgumentException("Name is empty or too long. Length: " + nameField.length());
         }
 
-        if (!Pattern.matches(Constants.NAME_FIELD_REGEX, nameField)) {
+        if (!Pattern.matches(NAME_FIELD_REGEX, nameField)) {
             throw new IllegalArgumentException("Name has disallowed characters: " + nameField);
         }
     }
