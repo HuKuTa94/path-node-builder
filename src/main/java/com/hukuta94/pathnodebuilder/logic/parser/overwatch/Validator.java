@@ -33,6 +33,11 @@ public class Validator
 
     public void validateInputString(String inputString) throws Exception
     {
+        if (inputString == null || inputString.isEmpty())
+        {
+            throw new Exception("Input data is empty");
+        }
+
         Matcher matcher = PATTERN_INPUT_VARS_EXIST.matcher(inputString);
         if (!matcher.find())
         {
