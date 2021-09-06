@@ -1,8 +1,8 @@
 package com.hukuta94.pathnodebuilder.logic;
 
-import com.hukuta94.pathnodebuilder.common.types.Vector;
 import com.hukuta94.pathnodebuilder.common.types.Tuple;
-import org.springframework.stereotype.Component;
+import com.hukuta94.pathnodebuilder.common.types.Vector;
+import org.springframework.stereotype.Service;
 
 /**
  * Finds and deletes nullable elements in input data (position array and connection array). When a user uses
@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
  * The case with a connection array is a little bit harder. It requires to recompute and update all indexes
  * for each element if there are nullable elements (holes) between them.
  */
-@Component
+@Service
 public class Optimizator
 {
-    public Tuple<Vector[], int[][]> optimizeInputData(
-            Vector[] inputPositions,
-            int[][] inputConnections,
-            boolean compressArrays)
+    public Tuple<Vector[], int[][]> optimizeInputData(Tuple<Vector[], int[][]> inputData, boolean compressArrays)
     {
+        Vector[] inputPositions = inputData.getObjectA();
+        int[][] inputConnections = inputData.getObjectB();
+
         Vector[] outputPositions = new Vector[inputPositions.length];
         int[][] outputConnections = new int[inputConnections.length][];
 

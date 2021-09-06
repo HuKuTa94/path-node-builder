@@ -108,7 +108,9 @@ public class OptimizatorTest
             };
 
         // When:
-        Tuple<Vector[], int[][]> result = optimizator.optimizeInputData(inputPositions, inputConnections, false);
+        Tuple<Vector[], int[][]> result =
+                optimizator.optimizeInputData(new Tuple<>(inputPositions, inputConnections), false);
+
         Vector[] actualPositions = result.getObjectA();
         int[][] actualConnections = result.getObjectB();
 
@@ -170,7 +172,9 @@ public class OptimizatorTest
             };
 
         // When:
-        Tuple<Vector[], int[][]> result = optimizator.optimizeInputData(inputPositions, inputConnections, true);
+        Tuple<Vector[], int[][]> result =
+                optimizator.optimizeInputData(new Tuple<>(inputPositions, inputConnections), true);
+
         Vector[] actualPositions = result.getObjectA();
         int[][] actualConnections = result.getObjectB();
 
