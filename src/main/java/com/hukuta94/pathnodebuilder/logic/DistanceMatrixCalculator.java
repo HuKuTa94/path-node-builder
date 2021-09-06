@@ -1,15 +1,18 @@
 package com.hukuta94.pathnodebuilder.logic;
 
-import com.hukuta94.pathnodebuilder.common.types.Vector;
 import com.hukuta94.pathnodebuilder.common.types.Tuple;
-import org.springframework.stereotype.Component;
+import com.hukuta94.pathnodebuilder.common.types.Vector;
+import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Calculator of distance matrix of the unit-edge graph
  */
-@Component
+@Service
 public class DistanceMatrixCalculator
 {
     /**
