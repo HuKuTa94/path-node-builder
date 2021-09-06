@@ -1,17 +1,16 @@
 package com.hukuta94.pathnodebuilder.logic.parser.overwatch;
 
 import com.hukuta94.pathnodebuilder.common.types.Tuple;
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.hukuta94.pathnodebuilder.common.types.Vector;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 //TODO It has bad code and it needs to be refactored
-@Component
+@Service
 public class OverwatchParser
 {
     // Input variable names
@@ -26,9 +25,6 @@ public class OverwatchParser
     private static Integer OUTPUT_VAR_CONNECTIONS_INDEX;
     private static Integer OUTPUT_VAR_MATRIX_INDEX;
 
-    // Patterns and regex to extract input data
-    private static Pattern PATTERN_INPUT_VARS_EXIST;
-
     private static final Pattern PATTERN_SPLIT_VECTOR_TO_COORDS = Pattern.compile(
             "(?<x>\\-?\\d+(\\.\\d+)?)\\s*\\,\\s*(?<y>\\-?\\d+(\\.?\\d+)?)\\s*\\,\\s*(?<z>\\-?\\d+(\\.?\\d+)?)");
 
@@ -39,8 +35,11 @@ public class OverwatchParser
     // Regex capture group names
     private static final String GROUP_ARRAY = "array";
 
+    private final Validator validator;
+
     @Autowired
     public OverwatchParser(
+            Validator validator,
             @Value("${overwatch.variables.input.positions-name}") String inputVarPositionsName,
             @Value("${overwatch.variables.input.connections-name}") String inputVarConnectionsName,
             @Value("${overwatch.variables.output.positions-name}") String outputVarPositionsName,
@@ -50,6 +49,8 @@ public class OverwatchParser
             @Value("${overwatch.variables.output.matrix-name}") String outputVarMatrixName,
             @Value("${overwatch.variables.output.matrix-index}") Integer outputVarMatrixIndex)
     {
+        this.validator = validator;
+
         // Init variable names from config
         INPUT_VAR_POSITIONS_NAME = inputVarPositionsName;
         INPUT_VAR_CONNECTIONS_NAME = inputVarConnectionsName;
@@ -59,18 +60,12 @@ public class OverwatchParser
         OUTPUT_VAR_CONNECTIONS_INDEX = outputVarConnectionsIndex;
         OUTPUT_VAR_MATRIX_NAME = outputVarMatrixName;
         OUTPUT_VAR_MATRIX_INDEX = outputVarMatrixIndex;
-
-        // Init patterns
-        PATTERN_INPUT_VARS_EXIST = Pattern.compile(
-            String.format("(Global\\.%s)|(Global\\.%s)",
-                INPUT_VAR_POSITIONS_NAME,
-                INPUT_VAR_CONNECTIONS_NAME));
     }
 
     public Tuple<Vector[], int[][]> parseInputData(String inputString) throws Exception
     {
         // Try to find input vars in string
-        validateInputString(inputString);
+        validator.validateInputString(inputString);
 
         Vector[] inputNodePositions = parseNodePositions(inputString);
         int[][] inputNodeConnections = parseNodeConnections(inputString);
@@ -189,18 +184,7 @@ public class OverwatchParser
         builder.append(");");
     }
 
-    private void validateInputString(String inputString) throws Exception
-    {
-        Matcher matcher = PATTERN_INPUT_VARS_EXIST.matcher(inputString);
-        if (!matcher.find() && matcher.groupCount() < 2)
-        {
-            throw new Exception("Input string does not contain input data variables '" +
-                    INPUT_VAR_POSITIONS_NAME + "' and/or '" + INPUT_VAR_CONNECTIONS_NAME + "'");
-        }
-    }
-
-    private Vector[] parseNodePositions(String inputString)
-    {
+    private Vector[] parseNodePositions(String inputString) throws Exception {
         // Extract from var the array with items
         Pattern pattern = Pattern.compile(
                 String.format(REGEX_CAPTURE_ARRAY_WITH_ITEMS, INPUT_VAR_POSITIONS_NAME, GROUP_ARRAY),
@@ -239,11 +223,10 @@ public class OverwatchParser
             return resultArray;
         }
 
-        return null;
+        throw new Exception("Variable '".concat(INPUT_VAR_POSITIONS_NAME).concat("' does not contain value"));
     }
 
-    private int[][] parseNodeConnections(String inputString)
-    {
+    private int[][] parseNodeConnections(String inputString) throws Exception {
         // Extract from var the array with items
         Pattern pattern = Pattern.compile(
                 String.format(REGEX_CAPTURE_ARRAY_WITH_ITEMS, INPUT_VAR_CONNECTIONS_NAME, GROUP_ARRAY),
@@ -291,6 +274,6 @@ public class OverwatchParser
             return resultArray;
         }
 
-        return null;
+        throw new Exception("Variable '".concat(INPUT_VAR_CONNECTIONS_NAME).concat("' does not contain value"));
     }
 }
