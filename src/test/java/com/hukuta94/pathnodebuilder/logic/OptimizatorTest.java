@@ -185,4 +185,59 @@ public class OptimizatorTest
         assertPositionArrays(expectedPositions, actualPositions);
         assertConnectionArrays(expectedConnections, actualConnections);
     }
+
+    @Test
+    @DisplayName("Node position has not any connection")
+    void nodePositionHasNotConnectionsTest()
+    {
+        // Given:
+        Vector[] inputPositions = new Vector[]
+            {                               // node indexes
+                null,                       // 0
+                new Vector(9, 0, 3), // 1
+                new Vector(6, 0, 1), // 2
+                null,                       // 3
+                new Vector(7, 0, 4), // 4 <- node has not connections
+                new Vector(1, 2, 3), // 5
+
+            };
+
+        int[][] inputConnections = new int[][]
+            {           // node indexes
+                null,   // 0
+                {2, 5}, // 1
+                {1},    // 2
+                null,   // 3
+                null,   // 4 <- node has not connections
+                {2},    // 5
+            };
+
+        Vector[] expectedPositions = new Vector[]
+            {                               // node indexes
+                new Vector(9, 0, 3), // 0
+                new Vector(6, 0, 1), // 1
+                new Vector(1, 2, 3), // 2
+            };
+
+        int[][] expectedConnections = new int[][]
+            {           // node indexes
+                {1, 2}, // 0
+                {0},    // 1
+                {1},    // 2
+            };
+
+        // When:
+        Tuple<Vector[], int[][]> result =
+                optimizator.optimizeInputData(new Tuple<>(inputPositions, inputConnections), true);
+
+        Vector[] actualPositions = result.getObjectA();
+        int[][] actualConnections = result.getObjectB();
+
+        // Then:
+        assertEquals(expectedPositions.length, actualPositions.length);
+        assertEquals(expectedConnections.length, actualConnections.length);
+
+        assertPositionArrays(expectedPositions, actualPositions);
+        assertConnectionArrays(expectedConnections, actualConnections);
+    }
 }
