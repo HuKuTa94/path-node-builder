@@ -29,8 +29,8 @@ public class Optimizator
         // Begin optimization input data
         for (int i = 0; i < inputPositions.length; i++)
         {
-            // Count of 'null' elements between side elements
-            if (inputPositions[i] == null) {
+            // Count of 'null' elements between side elements (also skips the nodes without any connections)
+            if (inputConnections[i] == null) {
                 emptySpaceCount++;
                 continue;
             }
