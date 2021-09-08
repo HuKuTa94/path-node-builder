@@ -1,0 +1,31 @@
+.card {
+    width: 50%;
+    margin: 10px auto;
+    padding: 10px;
+    background-color: #f2f7ffe6;
+    box-shadow: 5px 5px 10px #0000005c;
+    border-radius: 10px;
+}
+
+.card-text-area {
+    width: 99%;
+    height: 250px;
+    display: block;
+    resize: none;
+    outline: none;
+}
+
+.card-button {
+    width: 35%;
+    height: 12%;
+    display: block;
+    align-self: stretch;
+    font-size: 14px;
+    font-family: Arial, Narrow, serif;
+    color: #fff;
+    background-color: #ff9c00;
+    border-color: #ff9c00;
+    outline: none;
+}
+
+
