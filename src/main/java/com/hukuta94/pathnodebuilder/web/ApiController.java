@@ -14,12 +14,10 @@ public class ApiController
     private final DistanceMatrixService distanceMatrixService;
 
     @PostMapping("/distance-matrix/")
-    public ResponseEntity<String> computeDistanceMatrix(
-            @RequestBody String inputData,
-            @RequestParam(value = "isNewVersion") boolean isNewVersion)
+    public ResponseEntity<String> computeDistanceMatrix(@RequestBody String inputData)
     {
         try {
-            String result = distanceMatrixService.computeDistanceMatrix(inputData, isNewVersion);
+            String result = distanceMatrixService.computeDistanceMatrix(inputData, true);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

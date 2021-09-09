@@ -21,7 +21,7 @@ function copyTextToClipboard() {
 
 // ---------------------------------------------------- API METHODS ----------------------------------------------------
 function sendData() {
-    fetch("api/distance-matrix/?isNewVersion=true", {
+    fetch("api/distance-matrix/", {
         method: 'POST',
         body: sourceTextArea.value,
         headers: {'Content-Type': 'text/plain; charset=utf-8'},

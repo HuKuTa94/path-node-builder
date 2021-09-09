@@ -24,15 +24,11 @@ public class ApiControllerTest
         String inputData = ParserHelper.loadTestFile("overwatch/1/", null);
 
         // Then:
-        assertDoesNotThrow(()-> apiController.computeDistanceMatrix(inputData, true));
-        assertDoesNotThrow(()-> apiController.computeDistanceMatrix(inputData, false));
-        assertEquals(HttpStatus.OK, apiController.computeDistanceMatrix(inputData, true).getStatusCode());
-        assertEquals(HttpStatus.OK, apiController.computeDistanceMatrix(inputData, false).getStatusCode());
-        assertEquals(HttpStatus.BAD_REQUEST, apiController.computeDistanceMatrix(null, true).getStatusCode());
-        assertEquals(HttpStatus.BAD_REQUEST, apiController.computeDistanceMatrix("", true).getStatusCode());
-        assertEquals(HttpStatus.BAD_REQUEST, apiController.computeDistanceMatrix("BuilderNodePositions", true).getStatusCode());
-        assertEquals(HttpStatus.BAD_REQUEST, apiController.computeDistanceMatrix("BuilderNodePositions", true).getStatusCode());
-        assertEquals(HttpStatus.BAD_REQUEST, apiController.computeDistanceMatrix("Global.BuilderNodePositions", true).getStatusCode());
-        assertEquals(HttpStatus.BAD_REQUEST, apiController.computeDistanceMatrix("Global.BuilderNodePositions", true).getStatusCode());
+        assertDoesNotThrow(()-> apiController.computeDistanceMatrix(inputData));
+        assertEquals(HttpStatus.OK, apiController.computeDistanceMatrix(inputData).getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, apiController.computeDistanceMatrix(null).getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, apiController.computeDistanceMatrix("").getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, apiController.computeDistanceMatrix("BuilderNodePositions").getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, apiController.computeDistanceMatrix("Global.BuilderNodePositions").getStatusCode());
     }
 }
