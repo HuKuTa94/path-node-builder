@@ -220,10 +220,15 @@ public class OverwatchParser
                 }
             }
 
+            if (resultArray.length == 1)
+            {
+                throw new Exception("Variable 'Global.".concat(INPUT_VAR_POSITIONS_NAME).concat("' contains incorrect data"));
+            }
+
             return resultArray;
         }
 
-        throw new Exception("Variable '".concat(INPUT_VAR_POSITIONS_NAME).concat("' does not contain value"));
+        throw new Exception("Variable 'Global.".concat(INPUT_VAR_POSITIONS_NAME).concat("' not found or does not contain value"));
     }
 
     private int[][] parseNodeConnections(String inputString) throws Exception {
@@ -271,9 +276,14 @@ public class OverwatchParser
                 resultArray[i] = connections;
             }
 
+            if (resultArray.length == 1)
+            {
+                throw new Exception("Variable 'Global.".concat(INPUT_VAR_CONNECTIONS_NAME).concat("' contains incorrect data"));
+            }
+
             return resultArray;
         }
 
-        throw new Exception("Variable '".concat(INPUT_VAR_CONNECTIONS_NAME).concat("' does not contain value"));
+        throw new Exception("Variable 'Global.".concat(INPUT_VAR_CONNECTIONS_NAME).concat("' not found or does not contain value"));
     }
 }

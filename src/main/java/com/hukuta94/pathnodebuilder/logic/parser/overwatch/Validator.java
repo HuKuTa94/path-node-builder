@@ -41,8 +41,8 @@ public class Validator
         Matcher matcher = PATTERN_INPUT_VARS_EXIST.matcher(inputString);
         if (!matcher.find())
         {
-            throw new Exception("Input data does not contain variables '" +
-                    INPUT_VAR_POSITIONS_NAME + "' and/or '" + INPUT_VAR_CONNECTIONS_NAME + "'");
+            throw new Exception("Input data does not contain variables 'Global." +
+                    INPUT_VAR_POSITIONS_NAME + "' and/or 'Global." + INPUT_VAR_CONNECTIONS_NAME + "'");
         }
     }
 
