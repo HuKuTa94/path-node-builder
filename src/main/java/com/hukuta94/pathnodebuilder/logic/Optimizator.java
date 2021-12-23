@@ -87,9 +87,7 @@ public class Optimizator
             }
         }
 
-        return compressArrays
-                ? compressArrays(outputPositions, outputConnections)
-                : new Tuple<>(outputPositions, outputConnections);
+        return compressArrays(outputPositions, outputConnections);
     }
 
     private Tuple<Vector[], int[][]> compressArrays(Vector[] positionArray, int[][] connectionArray)

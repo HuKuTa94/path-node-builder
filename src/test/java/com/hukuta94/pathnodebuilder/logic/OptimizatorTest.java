@@ -88,10 +88,6 @@ public class OptimizatorTest
                 new Vector(6, 0, 1), // 2
                 new Vector(7, 0, 4), // 3
                 new Vector(3, 2, 1), // 4
-                null,                       // 5
-                null,                       // 6
-                null,                       // 7
-                null,                       // 8
             };
 
         int[][] expectedConnections = new int[][]
@@ -101,10 +97,6 @@ public class OptimizatorTest
                 {1, 3}, // 2
                 {0, 2}, // 3
                 {2, 3}, // 4
-                null,   // 5
-                null,   // 6
-                null,   // 7
-                null,   // 8
             };
 
         // When:

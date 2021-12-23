@@ -16,54 +16,25 @@ import java.util.Set;
 public class DistanceMatrixCalculator
 {
     /**
-     * Creates an instance of default or optimized distance matrix.
-     * default matrix result (greedy algorithm):
+     * Calculates distance matrix from output optimized data (position array and connection array).
+     * default matrix (with zeros):
      * {0, 1, 2, 3}
      * {1, 0, 4, 5}
      * {2, 4, 0, 6}
      * {3, 5, 6, 0}
      *
-     * optimized matrix result (lazy algorithm):
+     * optimized matrix (without zeros):
      * {1, 2, 3}
      * {4, 5}
      * {6}
-     *
-     * @param size of the the first array
-     * @param optimized true - fill upper part of the main diagonal only (matrix[x][y]). It can reduce used memory
-     *                  and improve performance. false - fill the full matrix. The lower part of the main diagonal
-     *                  will have inverted values (matrix[y][x])
-     */
-    private int[][] createEmptyDistanceMatrix(int size, boolean optimized)
-    {
-        if (!optimized)
-        {
-            return new int[size][size];
-        }
-
-        int[][] distanceMatrix = new int[size - 1][];
-        int x = 0;
-        for (int y = size; y > 1; y--)
-        {
-            distanceMatrix[x] = new int[y];
-            x++;
-        }
-
-        return distanceMatrix;
-    }
-
-    /**
-     * Calculates distance matrix from output optimized data (position array and connection array)
      * @param outputOptimizedData optimized data that is ready to calculate the distance matrix
-     * @param optimized true - fill upper part of the left diagonal only (matrix[x][y]). It can reduce used memory
-     *                  and improve performance. false - fill the full matrix. The lower part of the main diagonal
-     *                  will have inverted values (matrix[y][x])
      * @return the computed distance matrix that is ready to use in mods of Overwatch Workshop based on Path Node Builder
      */
-    public int[][] calculate(Tuple<Vector[], int[][]> outputOptimizedData, boolean optimized)
+    public int[][] calculate(Tuple<Vector[], int[][]> outputOptimizedData)
     {
         Vector[] outputPositions = outputOptimizedData.getObjectA();
         int[][] outputConnections = outputOptimizedData.getObjectB();
-        int[][] distanceMatrix = createEmptyDistanceMatrix(outputPositions.length, optimized);
+        int[][] distanceMatrix = new int[outputPositions.length][outputPositions.length];
 
         // Calculate all distances for each node
         for (int startNodeId = 0; startNodeId < distanceMatrix.length; startNodeId++)
@@ -90,60 +61,28 @@ public class DistanceMatrixCalculator
                         queue.addLast(endNodeId);
                         visitedNodes.add(endNodeId);
 
-                        // Skip element if it is lower than the main diagonal
-                        if (optimized && endNodeId <= startNodeId) {
-                            continue;
-                        }
-
                         // Accumulate distance to neighbor
-                        // Default matrix algorithm (gready)
-                        if (!optimized) {
-                            distanceMatrix[startNodeId][endNodeId] = distanceMatrix[startNodeId][currentNodeId] + 1;
-                            continue;
-                        }
-
-                        // Optimized matrix algorithm (lazy)
-                        // End node is lower than the main diagonal
-                        if (startNodeId > endNodeId) {
-                            distanceMatrix[startNodeId][endNodeId - startNodeId] = distanceMatrix[startNodeId][currentNodeId - endNodeId] + 1;
-                        }
-
-                        // End node is higher than the main diagonal
-                        else {
-                            int currentDistance;
-
-                            // Current node has been visited previously (it is lower than the main diagonal)
-                            if (currentNodeId < startNodeId) {
-                                currentDistance = distanceMatrix[currentNodeId][startNodeId - currentNodeId];
-                            }
-                            // Current node has not been visited before (it is higher than the main diagonal)
-                            else {
-                                currentDistance = distanceMatrix[startNodeId][currentNodeId - startNodeId];
-                            }
-
-                            distanceMatrix[startNodeId][endNodeId - startNodeId] = currentDistance + 1;
-                        }
+                        distanceMatrix[startNodeId][endNodeId] = distanceMatrix[startNodeId][currentNodeId] + 1;
                     }
                 }
             }
         }
 
-        return optimized
-                ? deleteZerosInInnerArrays(distanceMatrix)
-                : distanceMatrix;
+        return distanceMatrix;
     }
 
-    private int[][] deleteZerosInInnerArrays(int[][] distanceMatrix)
+    public int[][] deleteZerosInDistanceMatrix(int[][] distanceMatrix)
     {
-        int[][] result = new int[distanceMatrix.length][];
+        int arraySize = distanceMatrix.length - 1;
+        int[][] result = new int[arraySize][];
 
         // Don't copy the first 'zero' elements of inner arrays to the result
-        for (int i = 0; i < distanceMatrix.length; i++)
+        for (int i = 0; i < arraySize; i++)
         {
-            result[i] = new int[distanceMatrix[i].length - 1];
+            result[i] = new int[distanceMatrix[i].length - 1 - i];
 
             if (distanceMatrix[i].length - 1 >= 0)
-                System.arraycopy(distanceMatrix[i], 1, result[i], 0, distanceMatrix[i].length - 1);
+                System.arraycopy(distanceMatrix[i], 1 + i, result[i], 0, distanceMatrix[i].length - 1 - i);
         }
 
         return result;

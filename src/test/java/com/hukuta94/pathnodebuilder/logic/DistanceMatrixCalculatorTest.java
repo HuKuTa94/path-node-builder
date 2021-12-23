@@ -87,7 +87,7 @@ public class DistanceMatrixCalculatorTest
             };
 
         // When:
-        int[][] actualDistanceMatrix = distanceMatrixCalculator.calculate(getOptimizedTestData(), false);
+        int[][] actualDistanceMatrix = distanceMatrixCalculator.calculate(getOptimizedTestData());
 
         // Then:
         assertDistanceMatrixArrays(expectedDistanceMatrix, actualDistanceMatrix);
@@ -110,9 +110,10 @@ public class DistanceMatrixCalculatorTest
             };
 
         // When:
-        int[][] actualDistanceMatrix = distanceMatrixCalculator.calculate(getOptimizedTestData(), true);
+        int[][] actualDistanceMatrix = distanceMatrixCalculator.calculate(getOptimizedTestData());
+        int[][] actualDistanceMatrixWithoutZeros = distanceMatrixCalculator.deleteZerosInDistanceMatrix(actualDistanceMatrix);
 
         // Then:
-        assertDistanceMatrixArrays(expectedDistanceMatrix, actualDistanceMatrix);
+        assertDistanceMatrixArrays(expectedDistanceMatrix, actualDistanceMatrixWithoutZeros);
     }
 }

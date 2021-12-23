@@ -17,7 +17,7 @@ public class ApiController
     public ResponseEntity<String> computeDistanceMatrix(@RequestBody String inputData)
     {
         try {
-            String result = distanceMatrixService.computeDistanceMatrix(inputData, true);
+            String result = distanceMatrixService.computeDistanceMatrix(inputData);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

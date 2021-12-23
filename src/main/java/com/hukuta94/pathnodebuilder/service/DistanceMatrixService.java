@@ -16,7 +16,7 @@ public class DistanceMatrixService
     private final Optimizator optimizator;
     private final DistanceMatrixCalculator distanceMatrixCalculator;
 
-    public String computeDistanceMatrix(String inputString, boolean optimized) throws Exception
+    public String computeDistanceMatrix(String inputString) throws Exception
     {
         // Convert input data of Overwatch Workshop to vector and connection arrays
         Tuple<Vector[], int[][]> inputData = overwatchParser.parseInputData(inputString);
@@ -25,12 +25,13 @@ public class DistanceMatrixService
         Tuple<Vector[], int[][]>  optimizedData = optimizator.optimizeInputData(inputData, true);
 
         // Calculate distance matrix using optimized data
-        int[][] distanceMatrix = distanceMatrixCalculator.calculate(optimizedData, optimized);
+        int[][] distanceMatrix = distanceMatrixCalculator.calculate(optimizedData);
+        int[][] distanceMatrixWithoutZeroElements = distanceMatrixCalculator.deleteZerosInDistanceMatrix(distanceMatrix);
 
         // Convert result to the Overwatch Workshop format
         return overwatchParser.parseOutputData(
             optimizedData.getObjectA(),
             optimizedData.getObjectB(),
-            distanceMatrix);
+            distanceMatrixWithoutZeroElements);
     }
 }
