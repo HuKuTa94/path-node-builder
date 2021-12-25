@@ -1,0 +1,67 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+scale 300 width
+hide empty description
+
+state "Init" as Init
+state "Idle" as Idle
+state "Find closest\nnode Id to target" as FindClosestNodeIdToTarget
+state "Find closest\nnode Id to bot" as FindClosestNodeIdToBot
+
+'Idle
+[*] -down-> Init : Bot created
+Init : Init bot when just created
+Init : or reset pathfinding
+Init -left-> Idle : Pathfinding is reset
+
+'Targeting
+Idle -left-> FindClosestNodeIdToTarget : [BotTargetPlayer != -1] or\n[BotTargetPosition != -1]
+FindClosestNodeIdToTarget --> FindClosestNodeIdToBot : [BotClosestNodeIdToTarget = -1]
+FindClosestNodeIdToBot --> FindNextNodeId : [BotClosestNodeIdToBot != -1]
+
+state "Find next\nnode Id in path" as FindNextNodeId {
+    state BeginPathFindingChoice <<choice>>
+    [*] --> BeginPathFindingChoice
+    state BotCanSeeNextNodeChoice <<choice>>
+    state BotJustBeganPathFindingChoice <<choice>>
+    state BotFolowPathChoice <<choice>>
+    state BotNextNodePositionYComponentChoice <<choice>>
+    state "Move to closest\nnode position to bot" as MoveToClosestNodeToBot
+    state "Move to next\nnode position in path" as MoveToNextNodeInPath
+    state "Move to target\nposition" as MoveToTargetPosition
+    state "Follow to\nnext position" as FollowToNextPosition
+    state Join1 <<join>>
+    state Join2 <<join>>
+
+    'Choice next node position
+    'Bot just began pathfinding
+    BeginPathFindingChoice -right-> BotJustBeganPathFindingChoice : Bot just\nbegan pathfindng\n[BotPrevNodeId = -1]
+    BotJustBeganPathFindingChoice --> BotCanSeeNextNodeChoice : Bot can see\nnext position
+    BotJustBeganPathFindingChoice --> MoveToClosestNodeToBot : Bot can't see\nnext position
+    BotCanSeeNextNodeChoice --> MoveToClosestNodeToBot : Next position is\nhigher than bot's position
+    BotCanSeeNextNodeChoice --> Join1 : Next position is not\nhigher than bot's position
+'    Join1 --> MoveToClosestNodeToBot : Next position is\nhigher than bot's position
+'    Join1 --> MoveToNextNodeInPath : Next position is not\nhigher than bot's position
+
+    'Bot follow path already
+    BeginPathFindingChoice -left-> BotFolowPathChoice : Bot following path\n[BotPrevNodeId != -1]
+    BotFolowPathChoice --> Join1 : Next position\n is not a target
+    BotFolowPathChoice -left-> BotNextNodePositionYComponentChoice : Next position\n is a target
+    BotNextNodePositionYComponentChoice --> MoveToTargetPosition : Target position is not\nhigher than bot's position
+    BotNextNodePositionYComponentChoice --> Join1 : Target position is\nhigher than bot's position
+
+    'End pathfinding
+    Join1 --> MoveToNextNodeInPath
+    MoveToClosestNodeToBot --> Join2
+    MoveToNextNodeInPath --> Join2
+    MoveToTargetPosition --> Join2
+    Join2 --> FollowToNextPosition
+    FollowToNextPosition --> [*]
+'    FollowToNextPosition -up-> Init : Bot reached\ntarget
+'    FollowToNextPosition -left-> FindClosestNodeIdToTarget : Bot triggered\ntimestamp
+}
+
+
+
+@enduml

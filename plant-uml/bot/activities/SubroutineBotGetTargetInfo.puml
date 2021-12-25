@@ -1,0 +1,24 @@
+@startuml
+
+scale 800 width
+
+card "**SUBROUTINE:** BOT - GET TARGET INFO" {
+    start
+    if (BotTargetPlayer == -1 &&\nBotClosestNodeIdToTarget != -1) then (Yes (Target is a position))
+        end;
+        note left: Target is not a player,\ndont need to update\ntarget position
+    else (No (Target is a player))
+        if (BotTargetPlayer == -1) then (Yes (Target is a position))
+            note right: Target position is already set,\nskip to next action\n(performing once only)
+        else (No (Target is a player))
+            :BotTargetPosition = Position Of(BotTargetPlayer);
+            note left: Update target position every time\nwhen bot reaches next node
+        endif;
+        :BotClosestNodeIdToTarget = __function of finding closest node to target position__;
+        note left: If the bot's target is a position,\nfind the closest node to target once only;
+        note right: If the bot's target is a player,\nfind the closest node to target each time\nwhen bot reaches the next node
+        end;
+    endif;
+}
+
+@enduml

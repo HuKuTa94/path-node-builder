@@ -1,0 +1,15 @@
+@startuml
+
+scale 500 width
+
+card "**Rule:** BOT - PATH FINDING - INIT" {
+    :BotMoveSpeedMultiplier = 1
+    ----
+    Used to calculate the time
+    required to reach next node;
+
+    :Call Subroutine(BotResetPathFinding);
+    kill
+}
+
+@enduml

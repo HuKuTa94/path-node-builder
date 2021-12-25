@@ -1,0 +1,24 @@
+@startuml
+
+scale 500 width
+
+card "**SUBROUTINE:** BOT - GET NEXT NODE FROM CLOSEST NODE" {
+    start
+
+    :Call Subroutine( BotFindNextNodeIdInConnections );
+    :BotNextNodePosition = Global.NodePositions[ BotNextNodeId ];
+
+    if (BotNextNodeId == BotClosestNodeIdToTarget &&\nIs In Line Of Sight( BotTargetPosition )) then (Yes)
+        :BotNextNodePosition = BotTargetPosition;
+        note left: Bot can see target position
+        end;
+    elseif (BotPrevNodeId == -1 &&\n!Is In Line Of Sight( BotTargetPosition )) then (Yes)
+        :BotNextNodeId = BotClosestNodeIdToBot;
+        note right: Bot can't see next node.\nGo to closest node to bot
+        :BotNextNodePosition = Global.NodePositions[ BotNextNodeId ];
+    endif;
+
+    end;
+}
+
+@enduml

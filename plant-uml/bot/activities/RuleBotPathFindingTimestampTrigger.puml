@@ -1,0 +1,35 @@
+@startuml
+
+scale 500 width
+
+card "**RULE:** BOT - PATH FINDING - TIMESTAMP TRIGGER" {
+    start
+
+    :Call Subroutine (BotGetTargetInfo);
+
+    if (Distance Between( Position Of(Bot), BotNextNodePosition) > 1.5 ) then (Yes (Triggered timestamp))
+        :BotClosestNodeIdBot = -1;
+        note left: Bot didnt reach node (triggered timestamp),\nreset closest node Id to begin find new closest node
+    else (No (Bot reached the node))
+        :BotPrevNodeId = BotNextNodeId;
+        if (BotNextNodeId != BotClosestNodeIdToTarget) then (Yes (Reached node is not target))
+            :BotClosestNodeIdToBot = BotNextNodeId;
+        else (No (Reached node is target))
+            if (Distance Between( Position Of(Bot), BotTargetPosition) > 1.5) then (Yes (But didnt reach target position))
+                :BotNextNodePosition = BotTargetPosition;
+                :Call Subroutine(BotComputeTimestamp);
+                end;
+            else (No (Bot reached target position)
+                :Call Subroutine(BotResetPathFinding);
+                end;
+            endif;
+        endif;
+    endif;
+
+    :Call Subroutine(BotGetNextNodeFromClosestNode);
+    :Call Subroutine(BotComputeTimestamp);
+
+    end;
+}
+
+@enduml

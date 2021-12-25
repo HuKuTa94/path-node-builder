@@ -1,0 +1,24 @@
+@startuml
+
+scale 500 width
+
+card "**RULE:** BOT - PATH FINDING - START" {
+    :BotIsPathFinding = True;
+
+    :Call Subroutine(BotGetTargetInfo)
+    ----
+    Find the closest node to target;
+
+    :Call Subroutine(BotGetNextNodeFromClosestNode)
+    ----
+    Find best next node from current node in path;
+
+    :Call Subroutine(BotComputeTimestamp)
+    ----
+    Time required to reach next node;
+
+    :Start Facing(...to BotNextNodePosition)
+    Start Throttle In Direction(...to BotNextNodePosition);
+}
+
+@enduml

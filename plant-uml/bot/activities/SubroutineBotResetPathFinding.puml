@@ -1,0 +1,24 @@
+@startuml
+
+scale 500 width
+
+card "**SUBROUTINE:** BOT - RESET PATH FINDING" {
+    start
+    :BotPrevNodeId = -1
+    BotNextNodeId = -1
+    BotTargetPlayer = -1
+    BotTargetPosition = -1
+    BotClosestNodeIdToBot = -1
+    BotIsPathFinding = False
+    BotCancelPathFinding = False
+    ----
+    Reset all navigation vars;
+
+    :Stop Facing()
+    Stop Throttle In Direction()
+    ----
+    Reset movement;
+    end;
+}
+
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+
+scale 500 width
+
+card "**SUBROUTINE:** BOT - COMPUTE TIMESTAMP" {
+    start
+
+    :BotTimestamp =
+        Distance Between( Position of (Bot), BotNextNodePosition ) / (5.4 * BotMoveSpeedMultiplier);
+    note left: First, compute the time\nof way to the next node
+
+    :BotTimestamp = Total Time Elapsed + BotTimestamp;
+    note left: Now, need to add computed time\nto the total game time elapsed\nto get the next timestamp
+
+    end;
+}
+
+@enduml

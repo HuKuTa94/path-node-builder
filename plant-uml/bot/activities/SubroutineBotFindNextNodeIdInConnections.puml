@@ -1,0 +1,69 @@
+@startuml
+
+scale 1000 width
+
+card "**SUBROUTINE:** BOT - FIND NEXT NODE ID IN CONNECTIONS" {
+    start
+
+    if (BotClosestNodeIdToBot == -1) then (Yes (Bot just begin pathfinding))
+        :BotClosestNodeIdToBot = __function of finding closest node to bot position__;
+    else (No (Bot already follow path))
+    endif;
+
+    :BotLoopConnectionArray = Global.NodeConncetions[ BotClosestNodeIdToBot ];
+
+    if (BotClosestNodeIdToBot == BotClosestNodeIdToTarget ||\nArray Contains( BotLoopConnectionArray, BotClosestNodeIdToTarget )) then (Yes)
+        :BotNextNodeId = BotClosestNodeIdToTarget;
+        note left: Next node is target node,\nreturn from subroutine
+        end;
+    else (No)
+    endif;
+
+    :__Remove BotPrevNodeId from BotLoopConnectionArray__;
+    :BotShortestDistanceToTarget = 999
+    BotCurrentDistanceToTarget = 999;
+    note left: these vars are used to select the best\nnode Id in path using a matrix of unit distances
+
+    :BotShortestDistanceInMeters = 999
+    BotCurrentDistanceInMeters = 999;
+    note left: these vars are used to select the closest node\nto target using real distance in meters\nin controversial cases, when there is\nanother node with the same unit distance
+
+    partition "Find next node Id loop" {
+        while (for (BotLoopIterator1 = 0; BotLoopIterator1 < BotLoopConnectionArray; BotLoopIterator1++))
+            :BotLoopCurrentNodeId = BotLoopConnectionArray[ BotLoopIterator1 ];
+
+            partition "Optimized distance matrix algorithm" {
+                if (BotLoopCurrentNodeId > BotClosestNodeIdToTarget) then (Yes (Lower diagonal))
+                    :BotCurrentDistanceToTarget =
+                        Global.DistanceMatrix
+                            [BotClosestNodeIdToTarget][BotLoopCurrentNodeId - BotClosestNodeIdToTarget - 1];
+                else (No (Upper diagonal))
+                    :BotCurrentDistanceToTarget =
+                        Global.DistanceMatrix
+                            [BotLoopCurrentNodeId][BotClosestNodeIdToTarget - BotLoopCurrentNodeId - 1];
+                endif;
+            }
+
+            if (BotCurrentDistanceToTarget < BotShortestDistanceToTarget) then (Yes)
+                :BotShortestDistanceToTarget = BotCurrentDistanceToTarget;
+
+            elseif (BotCurrentDistanceToTarget < BotShortestDistanceToTarget) then (Yes (One more node has\nsame unit distance to target))
+                if (BotShortestDistanceInMeters == 999) then (Yes(Once calculate distance\nfrom next node to target node))
+                    :BotShortestDistanceInMeters =
+                        Distance Between( Global.NodePositions[BotNextNodeId], BotTargetPosition );
+                endif;
+
+                :BotCurrentDistanceInMeters =
+                    Distance Between( Global.NodePositions[BotLoopCurrentNodeId], BotTargetPosition );
+
+                if (BotCurrentDistanceInMeters < BotShortestDistanceInMeters ) then (Yes)
+                    :BotShortestDistanceInMeters = BotCurrentDistanceInMeters;
+                    :BotNextNodeId = BotLoopCurrentNodeId;
+                endif;
+            endif;
+        endwhile;
+    }
+    end;
+}
+
+@enduml
