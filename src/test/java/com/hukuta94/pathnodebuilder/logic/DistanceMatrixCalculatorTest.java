@@ -111,7 +111,7 @@ public class DistanceMatrixCalculatorTest
 
         // When:
         int[][] actualDistanceMatrix = distanceMatrixCalculator.calculate(getOptimizedTestData());
-        int[][] actualDistanceMatrixWithoutZeros = distanceMatrixCalculator.deleteZerosInDistanceMatrix(actualDistanceMatrix);
+        int[][] actualDistanceMatrixWithoutZeros = distanceMatrixCalculator.removeLowerDiagonalFromDistanceMatrix(actualDistanceMatrix);
 
         // Then:
         assertDistanceMatrixArrays(expectedDistanceMatrix, actualDistanceMatrixWithoutZeros);

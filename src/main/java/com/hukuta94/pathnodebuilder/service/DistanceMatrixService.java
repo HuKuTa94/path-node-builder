@@ -22,11 +22,11 @@ public class DistanceMatrixService
         Tuple<Vector[], int[][]> inputData = overwatchParser.parseInputData(inputString);
 
         // Optimize converted input data, delete all 'null' elements that were deleted in Workshop
-        Tuple<Vector[], int[][]>  optimizedData = optimizator.optimizeInputData(inputData, true);
+        Tuple<Vector[], int[][]>  optimizedData = optimizator.optimizeInputData(inputData);
 
         // Calculate distance matrix using optimized data
         int[][] distanceMatrix = distanceMatrixCalculator.calculate(optimizedData);
-        int[][] distanceMatrixWithoutZeroElements = distanceMatrixCalculator.deleteZerosInDistanceMatrix(distanceMatrix);
+        int[][] distanceMatrixWithoutZeroElements = distanceMatrixCalculator.removeLowerDiagonalFromDistanceMatrix(distanceMatrix);
 
         // Convert result to the Overwatch Workshop format
         return overwatchParser.parseOutputData(

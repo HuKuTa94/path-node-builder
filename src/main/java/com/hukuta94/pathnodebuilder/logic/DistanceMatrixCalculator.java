@@ -71,7 +71,7 @@ public class DistanceMatrixCalculator
         return distanceMatrix;
     }
 
-    public int[][] deleteZerosInDistanceMatrix(int[][] distanceMatrix)
+    public int[][] removeLowerDiagonalFromDistanceMatrix(int[][] distanceMatrix)
     {
         int arraySize = distanceMatrix.length - 1;
         int[][] result = new int[arraySize][];

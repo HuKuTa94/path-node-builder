@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class Optimizator
 {
-    public Tuple<Vector[], int[][]> optimizeInputData(Tuple<Vector[], int[][]> inputData, boolean compressArrays)
+    public Tuple<Vector[], int[][]> optimizeInputData(Tuple<Vector[], int[][]> inputData)
     {
         Vector[] inputPositions = inputData.getObjectA();
         int[][] inputConnections = inputData.getObjectB();
