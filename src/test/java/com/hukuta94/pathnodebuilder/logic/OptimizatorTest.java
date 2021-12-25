@@ -1,5 +1,6 @@
 package com.hukuta94.pathnodebuilder.logic;
 
+import com.hukuta94.pathnodebuilder.common.types.ParsedInputData;
 import com.hukuta94.pathnodebuilder.common.types.Vector;
 import com.hukuta94.pathnodebuilder.common.types.Tuple;
 import com.hukuta94.pathnodebuilder.logic.parser.overwatch.OverwatchParser;
@@ -101,7 +102,7 @@ public class OptimizatorTest
 
         // When:
         Tuple<Vector[], int[][]> result =
-                optimizator.optimizeInputData(new Tuple<>(inputPositions, inputConnections));
+                optimizator.optimizeInputData(new ParsedInputData(inputPositions, inputConnections));
 
         Vector[] actualPositions = result.getObjectA();
         int[][] actualConnections = result.getObjectB();
@@ -165,7 +166,7 @@ public class OptimizatorTest
 
         // When:
         Tuple<Vector[], int[][]> result =
-                optimizator.optimizeInputData(new Tuple<>(inputPositions, inputConnections));
+                optimizator.optimizeInputData(new ParsedInputData(inputPositions, inputConnections));
 
         Vector[] actualPositions = result.getObjectA();
         int[][] actualConnections = result.getObjectB();
@@ -220,7 +221,7 @@ public class OptimizatorTest
 
         // When:
         Tuple<Vector[], int[][]> result =
-                optimizator.optimizeInputData(new Tuple<>(inputPositions, inputConnections));
+                optimizator.optimizeInputData(new ParsedInputData(inputPositions, inputConnections));
 
         Vector[] actualPositions = result.getObjectA();
         int[][] actualConnections = result.getObjectB();

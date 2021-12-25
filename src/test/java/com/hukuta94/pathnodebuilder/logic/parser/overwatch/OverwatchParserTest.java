@@ -1,12 +1,17 @@
 package com.hukuta94.pathnodebuilder.logic.parser.overwatch;
 
-import com.hukuta94.pathnodebuilder.common.types.Tuple;
+import com.hukuta94.pathnodebuilder.common.types.ParsedInputData;
 import com.hukuta94.pathnodebuilder.common.types.Vector;
 import com.hukuta94.pathnodebuilder.logic.parser.ParserHelper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -82,11 +87,11 @@ public class OverwatchParserTest
         String inputString = ParserHelper.loadTestFile("overwatch/2/before/", null);
 
         // When
-        Tuple<Vector[], int[][]> actualResult = overwatchParser.parseInputData(inputString);
+        ParsedInputData actualResult = overwatchParser.parseInputData(inputString);
 
         // Then
-        assertPositionArrays(expectedPositions, actualResult.getObjectA());
-        assertConnectionArrays(expectedConnections, actualResult.getObjectB());
+        assertPositionArrays(expectedPositions, actualResult.getPositions());
+        assertConnectionArrays(expectedConnections, actualResult.getConnections());
     }
 
     @Test
@@ -118,18 +123,96 @@ public class OverwatchParserTest
                         {6, 5, 4}
                 };
 
-        int[][] distanceMatrix = new int[][]
-                {
-                        {1, 2, 2, 2, 1, 1, 2},
-                        {1, 2, 3, 2, 2, 3},
-                        {1, 2, 3, 2, 3},
-                        {1, 2, 1, 2},
-                        {1, 2, 1},
-                        {2, 1},
-                        {1},
-                };
+        Map<Integer, List<List<Integer>>> distanceMatrix = new HashMap<>();
+        distanceMatrix.put(0, Arrays.asList(
+                Arrays.asList(1),
+                Arrays.asList(2),
+                Arrays.asList(2),
+                Arrays.asList(2),
+                Arrays.asList(1),
+                Arrays.asList(1),
+                Arrays.asList(2)));
+        distanceMatrix.put(1, Arrays.asList(
+                Arrays.asList(1),
+                Arrays.asList(2),
+                Arrays.asList(3),
+                Arrays.asList(2),
+                Arrays.asList(2),
+                Arrays.asList(3)));
+        distanceMatrix.put(2, Arrays.asList(
+                Arrays.asList(1),
+                Arrays.asList(2),
+                Arrays.asList(3),
+                Arrays.asList(2),
+                Arrays.asList(3)));
+        distanceMatrix.put(3, Arrays.asList(
+                Arrays.asList(1),
+                Arrays.asList(2),
+                Arrays.asList(1),
+                Arrays.asList(2)));
+        distanceMatrix.put(4, Arrays.asList(
+                Arrays.asList(1),
+                Arrays.asList(2),
+                Arrays.asList(1)));
+        distanceMatrix.put(5, Arrays.asList(
+                Arrays.asList(2),
+                Arrays.asList(1)));
+        distanceMatrix.put(6, Arrays.asList(
+                Arrays.asList(1)));
 
         String expectedResult = ParserHelper.loadTestFile("overwatch/2/after/", null);
+
+        // When
+        String actualResult = overwatchParser.parseOutputData(outputPositions, outputConnections, distanceMatrix);
+
+        // Then
+        assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    @DisplayName("Parse output data with uni-direction nodes")
+    void parseOutputDataWithUniDirectionNodesTest() throws Exception
+    {
+        // Given
+        Vector[] outputPositions = new Vector[]
+                {
+                        new Vector(-16.004, 0.350, -15.965),
+                        new Vector(-15.994, 0.350, -0.043),
+                        new Vector(-15.981, 0.350, 15.908),
+                        new Vector(15.941, 0.350, 16.021)
+                };
+
+        int[][] outputConnections = new int[][]
+                {
+                        {1, 2, 3},
+                        {0, 2, 3},
+                        {0, 1, 3},
+                        {0, 1, 2}
+                };
+
+        Map<Integer, List<List<Integer>>> distanceMatrix = new HashMap<>();
+        distanceMatrix.put(0, Arrays.asList(
+                Arrays.asList(0),
+                Arrays.asList(1, 4),
+                Arrays.asList(10),
+                Arrays.asList(2)));
+        distanceMatrix.put(1, Arrays.asList(
+                Arrays.asList(4),
+                Arrays.asList(0),
+                Arrays.asList(1),
+                Arrays.asList(5)));
+        distanceMatrix.put(2, Arrays.asList(
+                Arrays.asList(1),
+                Arrays.asList(1),
+                Arrays.asList(0),
+                Arrays.asList(2)));
+        distanceMatrix.put(3, Arrays.asList(
+                Arrays.asList(2),
+                Arrays.asList(5),
+                Arrays.asList(2),
+                Arrays.asList(0)));
+
+        String expectedResult = ParserHelper.loadTestFile("overwatch/3/after/", null);
 
         // When
         String actualResult = overwatchParser.parseOutputData(outputPositions, outputConnections, distanceMatrix);

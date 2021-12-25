@@ -4,10 +4,7 @@ import com.hukuta94.pathnodebuilder.common.types.Tuple;
 import com.hukuta94.pathnodebuilder.common.types.Vector;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Calculator of distance matrix of the unit-edge graph
@@ -71,6 +68,7 @@ public class DistanceMatrixCalculator
         return distanceMatrix;
     }
 
+    @Deprecated
     public int[][] removeLowerDiagonalFromDistanceMatrix(int[][] distanceMatrix)
     {
         int arraySize = distanceMatrix.length - 1;
@@ -86,5 +84,64 @@ public class DistanceMatrixCalculator
         }
 
         return result;
+    }
+
+    public Map<Integer, List<List<Integer>>> removeLowerDiagonalFromDistanceMatrix(Map<Integer, List<List<Integer>>> distanceMatrix)
+    {
+        int matrixSize = distanceMatrix.size() - 1;
+        Map<Integer, List<List<Integer>>> result = new HashMap<>(matrixSize);
+
+        // Don't copy the first 'zero' elements of inner arrays to the result
+        for (int i = 0; i < matrixSize; i++)
+        {
+            if (distanceMatrix.get(i).size() - 1 >= 0)
+            {
+                int distanceListSize = distanceMatrix.get(i).size() - i;
+                List<List<Integer>> newDistanceList = new ArrayList<>(distanceListSize);
+                for (int j = 1 + i; j < distanceListSize; j++)
+                {
+                    newDistanceList.add(distanceMatrix.get(i).get(j));
+                }
+
+                result.put(i, newDistanceList);
+            }
+        }
+
+        return result;
+    }
+
+    public Map<Integer, List<List<Integer>>> processUniDirectionNodes(int[][] distanceMatrix)
+    {
+        int matrixSize = distanceMatrix.length;
+        Map<Integer, List<List<Integer>>> processedDistanceMatrix = new HashMap<>(matrixSize);
+
+        for (int row = 0; row < matrixSize; row++)
+        {
+            // Uni-direction nodes can has two values of distance
+            // Example:
+            //  from node A to node B distance = 1, node A are connected to node B
+            //  from node B to node A distance = 4, node B aren't connected to node A
+            List<List<Integer>> nodeDistances = new ArrayList<>();
+
+            for (int column = 0; column < matrixSize; column++)
+            {
+                int highDiagonalDistanceValue = distanceMatrix[row][column];
+                int lowDiagonalDistanceValue = distanceMatrix[column][row];
+
+                // Bi-direction node
+                if (highDiagonalDistanceValue == lowDiagonalDistanceValue)
+                {
+                    nodeDistances.add(Collections.singletonList(highDiagonalDistanceValue));
+                }
+                // Uni-direction node
+                else
+                {
+                    nodeDistances.add(Arrays.asList(highDiagonalDistanceValue, lowDiagonalDistanceValue));
+                }
+            }
+            processedDistanceMatrix.put(row, nodeDistances);
+        }
+
+        return processedDistanceMatrix;
     }
 }

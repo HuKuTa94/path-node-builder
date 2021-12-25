@@ -1,11 +1,13 @@
 package com.hukuta94.pathnodebuilder.logic.parser.overwatch;
 
-import com.hukuta94.pathnodebuilder.common.types.Tuple;
+import com.hukuta94.pathnodebuilder.common.types.ParsedInputData;
 import com.hukuta94.pathnodebuilder.common.types.Vector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,7 +64,7 @@ public class OverwatchParser
         OUTPUT_VAR_MATRIX_INDEX = outputVarMatrixIndex;
     }
 
-    public Tuple<Vector[], int[][]> parseInputData(String inputString) throws Exception
+    public ParsedInputData parseInputData(String inputString) throws Exception
     {
         // Try to find input vars in string
         validator.validateInputString(inputString);
@@ -70,10 +72,13 @@ public class OverwatchParser
         Vector[] inputNodePositions = parseNodePositions(inputString);
         int[][] inputNodeConnections = parseNodeConnections(inputString);
 
-        return new Tuple<>(inputNodePositions, inputNodeConnections);
+        return new ParsedInputData(inputNodePositions, inputNodeConnections);
     }
 
-    public String parseOutputData(Vector[] outputPositions, int[][] outputConnections, int[][] distanceMatrix)
+    public String parseOutputData(
+            Vector[] outputPositions,
+            int[][] outputConnections,
+            Map<Integer, List<List<Integer>>> distanceMatrix)
     {
         StringBuilder builder = new StringBuilder();
         // Variables block
@@ -113,7 +118,7 @@ public class OverwatchParser
         builder.append("\tGlobal.");
         builder.append(OUTPUT_VAR_MATRIX_NAME);
         builder.append(" =\n");
-        convert2DArray(builder, distanceMatrix);
+        convertDistanceMatrix(builder, distanceMatrix);
         builder.append("\n}\n");
 
         return builder.toString();
@@ -182,6 +187,67 @@ public class OverwatchParser
         }
 
         builder.append(");");
+    }
+
+    private void convertDistanceMatrix(StringBuilder builder, Map<Integer, List<List<Integer>>> distanceMatrix)
+    {
+        int matrixSize = distanceMatrix.size();
+
+        if (matrixSize == 0) {
+            builder.append("\t\tArray();");
+            return;
+        }
+
+        // Begin fill array
+        builder.append("\t\tArray(\n");
+
+        for (int i = 0; i < matrixSize; i++)
+        {
+            builder.append("\t\t\tArray(");
+            for (int j = 0; j < distanceMatrix.get(i).size(); j++)
+            {
+                // Inner array contains two values
+                // Uni-direction node
+                if (distanceMatrix.get(i).get(j).size() > 1)
+                {
+                    convertArray(builder, distanceMatrix.get(i).get(j));
+                    if (j != distanceMatrix.get(i).size() - 1) {
+                        builder.append(", ");
+                    } else {
+                        builder.append(")");
+                    }
+                    continue;
+                }
+
+                builder.append(distanceMatrix.get(i).get(j).get(0));
+                if (j != distanceMatrix.get(i).size() - 1) {
+                    builder.append(", ");
+                } else {
+                    builder.append(")");
+                }
+            }
+
+            // Dont put ", " if it is the last element
+            if (i != matrixSize - 1) {
+                builder.append(",\n");
+            }
+        }
+
+        builder.append(");");
+    }
+
+    private void convertArray(StringBuilder builder, List<Integer> array)
+    {
+        builder.append("Array(");
+        for (int i = 0; i < array.size(); i++)
+        {
+            builder.append(array.get(i));
+            if (i != array.size() - 1) {
+                builder.append(", ");
+            } else {
+                builder.append(")");
+            }
+        }
     }
 
     private Vector[] parseNodePositions(String inputString) throws Exception {
