@@ -1,0 +1,19 @@
+variables
+{
+	global:
+		17: BuilderNodePositions
+		18: BuilderNodeConnections
+}
+
+actions
+{
+	Global.BuilderNodePositions = Array(Vector(3.904, 0.425, -7.896), Vector(8.067, 0.425, -3.922), Vector(11.961, 0.425, 0.067),
+		Vector(12.029, 0.425, 4.173), Vector(12.137, 0.425, 8.009), Vector(8.182, 0.425, 12.017), Vector(3.818, 0.425, 16.022), Vector(
+		0.192, 0.425, 16.005), Vector(-4.009, 0.425, 12.065), Vector(-7.971, 0.425, 8.201), Vector(-8.013, 0.425, 4.153), Vector(
+		-7.843, 0.425, 0.121), Vector(-4.125, 0.425, -3.950), Vector(0.017, 0.425, -8.012), Vector(-0.028, 0.425, -11.951), Vector(
+		-8.034, 0.425, -12.082), Vector(-12.062, 0.425, 0.065), Vector(-12.022, 0.425, 8.054), Vector(-7.934, 0.425, 20.269), Vector(
+		0.017, 0.425, 20.126));
+	Global.BuilderNodeConnections = Array(Array(1), Array(2), Array(3), Array(4), Array(5), Array(6), Array(7), Array(8, 19), Array(9),
+		Array(10, 17), Array(11), Array(12, 16), Array(13), Array(0, 14), Array(15), Array(16), Array(11, 17), Array(9, 18), Array(19),
+		Array(7));
+}
