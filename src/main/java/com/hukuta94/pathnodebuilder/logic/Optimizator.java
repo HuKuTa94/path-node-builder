@@ -1,6 +1,5 @@
 package com.hukuta94.pathnodebuilder.logic;
 
-import com.hukuta94.pathnodebuilder.common.types.ParsedInputData;
 import com.hukuta94.pathnodebuilder.common.types.Tuple;
 import com.hukuta94.pathnodebuilder.common.types.Vector;
 import org.springframework.stereotype.Service;
@@ -15,10 +14,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class Optimizator
 {
-    public Tuple<Vector[], int[][]> optimizeInputData(ParsedInputData inputData)
+    public Tuple<Vector[], int[][]> optimizeInputData(Tuple<Vector[], int[][]> inputData)
     {
-        Vector[] inputPositions = inputData.getPositions();
-        int[][] inputConnections = inputData.getConnections();
+        Vector[] inputPositions = inputData.getObjectA();
+        int[][] inputConnections = inputData.getObjectB();
 
         Vector[] outputPositions = new Vector[inputPositions.length];
         int[][] outputConnections = new int[inputConnections.length][];
