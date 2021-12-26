@@ -51,7 +51,43 @@ public class DistanceMatrixCalculatorTest
         return testData;
     }
 
+    private void assertDistanceMatrixArrays(float[][] expected, float[][] actual)
+    {
+        // Length of outer array
+        assertEquals(expected.length, actual.length);
+
+        for (int i = 0; i < actual.length; i++)
+        {
+            // Length of inner array
+            assertEquals(expected[i].length, actual[i].length);
+
+            // Values of inner elements
+            for (int j = 0; j < actual[i].length; j++)
+            {
+                assertEquals(expected[i][j], actual[i][j]);
+            }
+        }
+    }
+
     private void assertDistanceMatrixArrays(int[][] expected, int[][] actual)
+    {
+        // Length of outer array
+        assertEquals(expected.length, actual.length);
+
+        for (int i = 0; i < actual.length; i++)
+        {
+            // Length of inner array
+            assertEquals(expected[i].length, actual[i].length);
+
+            // Values of inner elements
+            for (int j = 0; j < actual[i].length; j++)
+            {
+                assertEquals(expected[i][j], actual[i][j]);
+            }
+        }
+    }
+
+    private void assertDistanceMatrixArrays(int[][] expected, float[][] actual)
     {
         // Length of outer array
         assertEquals(expected.length, actual.length);
@@ -87,7 +123,7 @@ public class DistanceMatrixCalculatorTest
             };
 
         // When:
-        int[][] actualDistanceMatrix = distanceMatrixCalculator.calculate(getOptimizedTestData());
+        int[][] actualDistanceMatrix = distanceMatrixCalculator.calculateFullMatrix(getOptimizedTestData());
 
         // Then:
         assertDistanceMatrixArrays(expectedDistanceMatrix, actualDistanceMatrix);
@@ -110,10 +146,12 @@ public class DistanceMatrixCalculatorTest
             };
 
         // When:
-        int[][] actualDistanceMatrix = distanceMatrixCalculator.calculate(getOptimizedTestData());
-        int[][] actualDistanceMatrixWithoutZeros = distanceMatrixCalculator.removeLowerDiagonalFromDistanceMatrix(actualDistanceMatrix);
+        int[][] distanceMatrix = distanceMatrixCalculator.calculateFullMatrix(getOptimizedTestData());
+        float[][] distanceMatrixProcessedUniDirectionNodes = distanceMatrixCalculator.processUniDirectionNodes(distanceMatrix);
+        float[][] actualDistanceMatrixWithoutLowerDiagonal =
+                distanceMatrixCalculator.removeLowerDiagonalFromDistanceMatrix(distanceMatrixProcessedUniDirectionNodes);
 
         // Then:
-        assertDistanceMatrixArrays(expectedDistanceMatrix, actualDistanceMatrixWithoutZeros);
+        assertDistanceMatrixArrays(expectedDistanceMatrix, actualDistanceMatrixWithoutLowerDiagonal);
     }
 }

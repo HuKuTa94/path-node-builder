@@ -118,7 +118,7 @@ public class OverwatchParserTest
                         {6, 5, 4}
                 };
 
-        int[][] distanceMatrix = new int[][]
+        float[][] distanceMatrix = new float[][]
                 {
                         {1, 2, 2, 2, 1, 1, 2},
                         {1, 2, 3, 2, 2, 3},

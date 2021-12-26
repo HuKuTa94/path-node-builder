@@ -73,7 +73,7 @@ public class OverwatchParser
         return new Tuple<>(inputNodePositions, inputNodeConnections);
     }
 
-    public String parseOutputData(Vector[] outputPositions, int[][] outputConnections, int[][] distanceMatrix)
+    public String parseOutputData(Vector[] outputPositions, int[][] outputConnections, float[][] distanceMatrix)
     {
         StringBuilder builder = new StringBuilder();
         // Variables block
@@ -113,7 +113,7 @@ public class OverwatchParser
         builder.append("\tGlobal.");
         builder.append(OUTPUT_VAR_MATRIX_NAME);
         builder.append(" =\n");
-        convert2DArray(builder, distanceMatrix);
+        convertMatrix(builder, distanceMatrix);
         builder.append("\n}\n");
 
         return builder.toString();
@@ -182,6 +182,51 @@ public class OverwatchParser
         }
 
         builder.append(");");
+    }
+
+    private void convertMatrix(StringBuilder builder, float[][] elements)
+    {
+        int elementsSize = elements.length;
+
+        if (elementsSize == 0) {
+            builder.append("\t\tArray();");
+            return;
+        }
+
+        // Begin fill array
+        builder.append("\t\tArray(\n");
+
+        for (int i = 0; i < elementsSize; i++)
+        {
+            builder.append("\t\t\tArray(");
+            for (int j = 0; j < elements[i].length; j++)
+            {
+                float distance = elements[i][j];
+                builder.append(
+                    isIntegerNumber(distance)
+                        ? String.valueOf(distance).replaceAll("\\.0", "")
+                        : distance);
+
+                if (j != elements[i].length - 1) {
+                    builder.append(", ");
+                } else {
+                    builder.append(")");
+                }
+            }
+
+            // Dont put ", " if it is the last element
+            if (i != elementsSize - 1) {
+                builder.append(",\n");
+            }
+        }
+
+        builder.append(");");
+    }
+
+    private boolean isIntegerNumber(float number)
+    {
+        float remainder = number % 1;
+        return remainder >= 0 && remainder < 0.001;
     }
 
     private Vector[] parseNodePositions(String inputString) throws Exception {

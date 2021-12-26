@@ -25,8 +25,13 @@ public class DistanceMatrixService
         Tuple<Vector[], int[][]>  optimizedData = optimizator.optimizeInputData(inputData);
 
         // Calculate distance matrix using optimized data
-        int[][] distanceMatrix = distanceMatrixCalculator.calculate(optimizedData);
-        int[][] distanceMatrixWithoutZeroElements = distanceMatrixCalculator.removeLowerDiagonalFromDistanceMatrix(distanceMatrix);
+        int[][] distanceMatrix = distanceMatrixCalculator.calculateFullMatrix(optimizedData);
+
+        float[][] distanceMatrixProcessedUniDirectionNodes =
+                distanceMatrixCalculator.processUniDirectionNodes(distanceMatrix);
+
+        float[][] distanceMatrixWithoutZeroElements =
+                distanceMatrixCalculator.removeLowerDiagonalFromDistanceMatrix(distanceMatrixProcessedUniDirectionNodes);
 
         // Convert result to the Overwatch Workshop format
         return overwatchParser.parseOutputData(
