@@ -120,13 +120,13 @@ public class OverwatchParserTest
 
         float[][] distanceMatrix = new float[][]
                 {
-                        {1, 2, 2, 2, 1, 1, 2},
-                        {1, 2, 3, 2, 2, 3},
-                        {1, 2, 3, 2, 3},
-                        {1, 2, 1, 2},
-                        {1, 2, 1},
-                        {2, 1},
-                        {1},
+                        {1.1f, 2.2f, 2.2f, 2.2f, 1.1f, 1.1f, 2.2f},
+                        {1.1f, 2.2f, 3.3f, 2.2f, 2.2f, 3.3f},
+                        {1.1f, 2.2f, 3.3f, 2.2f, 3.3f},
+                        {1.1f, 2.2f, 1.1f, 2.2f},
+                        {1.1f, 2.2f, 1.1f},
+                        {2.2f, 1.1f},
+                        {1.1f},
                 };
 
         String expectedResult = ParserHelper.loadTestFile("overwatch/2/after/", null);

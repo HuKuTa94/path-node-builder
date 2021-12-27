@@ -201,11 +201,7 @@ public class OverwatchParser
             builder.append("\t\t\tArray(");
             for (int j = 0; j < elements[i].length; j++)
             {
-                float distance = elements[i][j];
-                builder.append(
-                    isIntegerNumber(distance)
-                        ? String.valueOf(distance).replaceAll("\\.0", "")
-                        : distance);
+                builder.append(elements[i][j]);
 
                 if (j != elements[i].length - 1) {
                     builder.append(", ");

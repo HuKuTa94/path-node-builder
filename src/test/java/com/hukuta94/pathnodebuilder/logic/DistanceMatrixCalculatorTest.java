@@ -87,24 +87,6 @@ public class DistanceMatrixCalculatorTest
         }
     }
 
-    private void assertDistanceMatrixArrays(int[][] expected, float[][] actual)
-    {
-        // Length of outer array
-        assertEquals(expected.length, actual.length);
-
-        for (int i = 0; i < actual.length; i++)
-        {
-            // Length of inner array
-            assertEquals(expected[i].length, actual[i].length);
-
-            // Values of inner elements
-            for (int j = 0; j < actual[i].length; j++)
-            {
-                assertEquals(expected[i][j], actual[i][j]);
-            }
-        }
-    }
-
     @Test
     @DisplayName("Default distance matrix (greedy algorithm)")
     void defaultDistanceMatrixTest()
@@ -134,15 +116,15 @@ public class DistanceMatrixCalculatorTest
     void optimizedDistanceMatrixTest()
     {
         // Given:
-        int[][] expectedDistanceMatrix = new int[][]
+        float[][] expectedDistanceMatrix = new float[][]
             {
-                {1, 2, 2, 2, 1, 1, 2},
-                {1, 2, 3, 2, 2, 3},
-                {1, 2, 3, 2, 3},
-                {1, 2, 1, 2},
-                {1, 2, 1},
-                {2, 1},
-                {1},
+                {1.1f, 2.2f, 2.2f, 2.2f, 1.1f, 1.1f, 2.2f},
+                {1.1f, 2.2f, 3.3f, 2.2f, 2.2f, 3.3f},
+                {1.1f, 2.2f, 3.3f, 2.2f, 3.3f},
+                {1.1f, 2.2f, 1.1f, 2.2f},
+                {1.1f, 2.2f, 1.1f},
+                {2.2f, 1.1f},
+                {1.1f},
             };
 
         // When:

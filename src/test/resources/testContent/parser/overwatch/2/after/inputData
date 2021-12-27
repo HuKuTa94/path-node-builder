@@ -29,11 +29,11 @@ actions
 			Array(6, 5, 4));
 	Global.DistanceMatrix =
 		Array(
-			Array(1, 2, 2, 2, 1, 1, 2),
-			Array(1, 2, 3, 2, 2, 3),
-			Array(1, 2, 3, 2, 3),
-			Array(1, 2, 1, 2),
-			Array(1, 2, 1),
-			Array(2, 1),
-			Array(1));
+			Array(1.1, 2.2, 2.2, 2.2, 1.1, 1.1, 2.2),
+			Array(1.1, 2.2, 3.3, 2.2, 2.2, 3.3),
+			Array(1.1, 2.2, 3.3, 2.2, 3.3),
+			Array(1.1, 2.2, 1.1, 2.2),
+			Array(1.1, 2.2, 1.1),
+			Array(2.2, 1.1),
+			Array(1.1));
 }

@@ -109,16 +109,7 @@ public class DistanceMatrixCalculator
                 int highDiagonalValue = distanceMatrix[row][column];
                 int lowDiagonalValue = distanceMatrix[column][row];
 
-                // Bi-direction node
-                if (highDiagonalValue == lowDiagonalValue)
-                {
-                    resultMatrix[row][column] = highDiagonalValue;
-                }
-                // Uni-direction node
-                else
-                {
-                    resultMatrix[row][column] = collapseIntegerNumbersToFloat(highDiagonalValue, lowDiagonalValue);
-                }
+                resultMatrix[row][column] = collapseIntegerNumbersToFloat(highDiagonalValue, lowDiagonalValue);
             }
         }
 
