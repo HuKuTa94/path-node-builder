@@ -120,17 +120,10 @@ public class DistanceMatrixCalculator
      * Collapses two integer numbers to float number.
      * @param leftNumber - for example 1
      * @param rightNumber - for example 4
-     * @return float number 1.4
+     * @return float number 1.004
      */
     private float collapseIntegerNumbersToFloat(int leftNumber, int rightNumber)
     {
-        float rightHandValue = rightNumber;
-
-        while ((int) rightHandValue > 0 )
-        {
-            rightHandValue /= 10;
-        }
-
-        return leftNumber + rightHandValue;
+        return leftNumber + rightNumber / 1000f;
     }
 }
