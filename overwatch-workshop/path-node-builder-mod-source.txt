@@ -1,8 +1,8 @@
 settings
 {
-	main
+	com.hukuta94.pathnodebuilder.main
 	{
-		Description: "Path node builder v1.2 CODE: QRD5A Use this tool to create path nodes for your PvE modes. Build project into EXPORT VARS, copy it and paste in your mode. Read more  instructions in WORKSHOP SETTINGS"
+		Description: "Path node builder v1.3 CODE: QRD5A Use this tool to create path nodes for your PvE modes. Build project into EXPORT VARS, copy it and paste in your mode. Read more  instructions in WORKSHOP SETTINGS"
 		Mode Name: "PATH NODE BUILDER"
 	}
 
@@ -29,6 +29,7 @@ settings
 		{
 			enabled maps
 			{
+				Havana
 			}
 		}
 
@@ -43,7 +44,6 @@ settings
 		{
 			enabled maps
 			{
-				Workshop Expanse
 			}
 		}
 
@@ -64,7 +64,6 @@ settings
 	{
 		General
 		{
-			Quick Melee: Off
 			Ultimate Ability: Off
 
 			enabled heroes
@@ -119,15 +118,8 @@ variables
 		26: BuilderIsNodeHaveConnection
 		27: IsBuildingProject
 		28: BuilderProgressBarValue
-		29: BuilderProgressBarValueStep
-		30: BuildProjectEmptySpace
 		31: BuildProjectNewElementIndex
 		32: BuildProjectOldElementIndex
-		33: BuildProjectQueueArray
-		34: BuildProjectVisitedNodes
-		35: BuildProjectCurrentNodeId
-		36: BuildProjectStartNodeId
-		37: BuildProjectNeighborNodeId
 		38: PathFindingStartNodeEffectPos
 		39: PathFindingTargetNodeEffectPos
 		40: BeamEffects
@@ -147,6 +139,7 @@ variables
 
 	player:
 		0: BuilderModeInfoHudId
+		108: BotIsFollowTargetConstantly
 		109: BotTempVar1
 		110: BotLoopCurrentNodeId
 		111: BotCurrentDistanceInMeters
@@ -180,13 +173,10 @@ subroutines
 	7: BuilderConnectNodeBeamEffect
 	8: BuilderDisconnectNode
 	9: BuilderBuildModeCreateNewNode
-	10: BuilderDeleteAllEffects
 	11: BuilderBuildProject
-	12: BuilderOptimizeData
 	13: BuilderUpdateConnectionIndexes
 	14: BuilderInitModEffects
 	15: BuilderBuildPreparedPathNodes
-	16: BuilderComputeDistanceMatrix
 	17: BuilderGetClossestNodeIdToCursor
 	18: PathFindingModeSelectNode
 	19: PathFindingModeReset
@@ -216,7 +206,7 @@ rule("=== PATH NODE BUILDER BY HUKUTA94#2589 ===")
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String(
 			"WEB APP IS OPEN SOURCE PROJECT:\r\ngithub.com/HuKuTa94/path-node-builder"), Right, -1000, Color(White), Color(White), Color(
 			White), Visible To, Default Visibility);
-		Create HUD Text(All Players(All Teams), Null, Null, Custom String("PATH NODE BUILDER V1.2 BY HUKUTA94#2589"), Right, -999, Color(
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String("PATH NODE BUILDER V1.3 BY HUKUTA94#2589"), Right, -999, Color(
 			White), Color(White), Color(White), Visible To, Default Visibility);
 		Create HUD Text(All Players(All Teams), Custom String(
 			"TO COMPUTE DISTANCE MATRIX USE WEB APP\r\n    peaceful-cove-76019.herokuapp.com"), Null, Null, Top, -99, Color(Orange), Color(
@@ -224,7 +214,7 @@ rule("=== PATH NODE BUILDER BY HUKUTA94#2589 ===")
 	}
 }
 
-rule("=== PATH NODE BUILDER - EXPORT BLOCK START - COPY THESE RULES AND SUBROUTINES INTO YOUR MODE ===")
+rule("=== PATH NODE BUILDER QRD5A - EXPORT BLOCK START - COPY THESE RULES AND SUBROUTINES INTO YOUR MODE ===")
 {
 	event
 	{
@@ -944,6 +934,28 @@ rule("MAP: HAVANA")
 	}
 }
 
+disabled rule("MAP: HAVANA (CORNER PATHS TESTING)")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Global.NodePositions = Array(Vector(34.082, 12.395, -61.509), Vector(27.589, 12.398, -61.675), Vector(27.676, 10.425, -86.929),
+			Vector(22.777, 10.425, -86.830), Vector(32.685, 10.425, -86.942), Vector(46.841, 11.412, -61.289), Vector(46.882, 11.394,
+			-67.083), Vector(46.929, 6.488, -80.426), Vector(23.014, 10.425, -96.716), Vector(10.330, 6.425, -97.088), Vector(10.321,
+			6.425, -101.361));
+		Global.NodeConnections = Array(Array(1, 5), Array(0, 2), Array(4, 3, 1), Array(2, 8), Array(2), Array(0, 6), Array(5, 7), Array(6),
+			Array(9, 3), Array(10, 8), Array(9));
+		Global.DistanceMatrix = Array(Array(1.001, 2.002, 3.003, 3.003, 1.001, 2.002, 3.003, 4.004, 5.005, 6.006), Array(1.001, 2.002,
+			2.002, 2.002, 3.003, 4.004, 3.003, 4.004, 5.005), Array(1.001, 1.001, 3.003, 4.004, 5.005, 2.002, 3.003, 4.004), Array(2.002,
+			4.004, 5.005, 6.006, 1.001, 2.002, 3.003), Array(4.004, 5.005, 6.006, 3.003, 4.004, 5.005), Array(1.001, 2.002, 5.005, 6.006,
+			7.007), Array(1.001, 6.006, 7.007, 8.008), Array(7.007, 8.008, 9.009), Array(1.001, 2.002), Array(1.001));
+	}
+}
+
 rule("BOT: PATH FINDING - INIT")
 {
 	event
@@ -1084,8 +1096,15 @@ rule("BOT: PATH FINDING - TIMESTAMP TRIGGER")
 					Abort;
 				"BOT REACHED TARGET POSITION"
 				Else;
-					Call Subroutine(BotResetPathFinding);
-					Abort;
+					If(!Event Player.BotIsFollowTargetConstantly);
+						Call Subroutine(BotResetPathFinding);
+						Abort;
+					"BOT MUST FOLLOW TARGET CONSTANTLY"
+					Else;
+						Event Player.BotNextNodePosition = Event Player.BotTargetPosition;
+						Call Subroutine(BotComputeTimestamp);
+						Abort;
+					End;
 				End;
 			End;
 		End;
@@ -1249,9 +1268,16 @@ rule("SUBROUTINE: BOT - GET NEXT POSITION")
 			0.700, 0), Event Player.BotTargetPosition + Vector(0, 0.700, 0), Barriers Do Not Block LOS));
 			"POSITION OF TARGET NODE IS NOT HIGHER THAN BOT POSITION"
 			If(Y Component Of(Event Player.BotNextNodePosition) - Y Component Of(Position Of(Event Player)) < 2.100);
-				"MOVE TO TARGET POSITION"
-				Event Player.BotNextNodePosition = Event Player.BotTargetPosition;
-				Abort;
+				"AVERAGE POSITION BETWEEN PRELAST AND LAST POSITION"
+				Event Player.BotTempVar1 = (Global.NodePositions[Event Player.BotClosestNodeIdToBot] + Event Player.BotTargetPosition + Vector(0,
+					2, 0)) / 2;
+				"PIT DETECTION BETWEEN POSITIONS"
+				If(Distance Between(Event Player.BotTempVar1, Ray Cast Hit Position(Event Player.BotTempVar1, Event Player.BotTempVar1 + Vector(0,
+					-5, 0), Null, Event Player, False)) < 0.500);
+					"MOVE TO TARGET POSITION"
+					Event Player.BotNextNodePosition = Event Player.BotTargetPosition;
+					Abort;
+				End;
 			End;
 			"2D BOT POSITION"
 			Event Player.BotTempVar1 = Vector(X Component Of(Position Of(Event Player)), 0, Z Component Of(Position Of(Event Player)));
@@ -1336,7 +1362,7 @@ rule("SUBROUTINE: BOT - GET RIGHT-HAND OF FLOAT NUMBER")
 	}
 }
 
-rule("=== PATH NODE BUILDER - EXPORT BLOCK END ===")
+rule("=== PATH NODE BUILDER QRD5A - EXPORT BLOCK END ===")
 {
 	event
 	{
@@ -1344,7 +1370,7 @@ rule("=== PATH NODE BUILDER - EXPORT BLOCK END ===")
 	}
 }
 
-disabled rule("")
+disabled rule("=== MOD INIT ===")
 {
 	event
 	{
@@ -2024,7 +2050,7 @@ rule("SUBROUTINE: CREATE NEW NODE")
 	}
 }
 
-disabled rule("=== BUILD PROJECT ===")
+disabled rule("=== BUILD COMPUTED IN WEB-APP PATH ===")
 {
 	event
 	{
@@ -2101,7 +2127,7 @@ rule("SUBROUTINE: BUILD PREPARED PATH NODES")
 		Disable Inspector Recording;
 		"CREATE NODE EFFECTS"
 		For Global Variable(LoopIterator1, 0, Count Of(Global.NodePositions), 1);
-			Create Effect(All Players(All Teams), Sphere, Color(Red), Global.NodePositions[Global.LoopIterator1], Global.NodeTriggerRadius,
+			Create Effect(All Players(All Teams), Sphere, Color(Purple), Global.NodePositions[Global.LoopIterator1], Global.NodeTriggerRadius,
 				Visible To);
 			Modify Global Variable(BuilderNodeEffectIdArray, Append To Array, Last Created Entity);
 		End;
@@ -2135,165 +2161,6 @@ rule("SUBROUTINE: BUILD PREPARED PATH NODES")
 		End;
 		"ANTI-CRASH DELAY"
 		Wait(0.060, Ignore Condition);
-	}
-}
-
-disabled rule("SUBROUTINE: BUILD PROJECT")
-{
-	event
-	{
-		Subroutine;
-		BuilderBuildProject;
-	}
-
-	actions
-	{
-		"DISABLE INSPECTOR WHILE COMPILING (WRITE RESULT ONLY)"
-		Skip If(!Global.OptimizedInspectorRecorder, 1);
-		Disable Inspector Recording;
-		"BEGIN COMPILING"
-		Global.IsBuildingProject = True;
-		Call Subroutine(BuilderDeleteAllEffects);
-		Call Subroutine(BuilderOptimizeData);
-		Wait(0.050, Ignore Condition);
-		"SELECTED NODE EFFECT"
-		Call Subroutine(BuilderInitModEffects);
-		Wait(0.050, Ignore Condition);
-		Call Subroutine(BuilderBuildPreparedPathNodes);
-		Call Subroutine(BuilderComputeDistanceMatrix);
-		Global.IsBuildingProject = False;
-		Enable Inspector Recording;
-	}
-}
-
-disabled rule("SUBROUTINE: DELETE ALL EFFECTS")
-{
-	event
-	{
-		Subroutine;
-		BuilderDeleteAllEffects;
-	}
-
-	actions
-	{
-		Destroy All Effects;
-		Destroy All In-World Text;
-	}
-}
-
-disabled rule("SUBROUTINE: OPTIMIZE DATA")
-{
-	event
-	{
-		Subroutine;
-		BuilderOptimizeData;
-	}
-
-	actions
-	{
-		"PREPARE TO OPTIMAZE DATA"
-		Destroy All Progress Bar HUD Text;
-		Global.BuilderProgressBarValue = 0;
-		Create Progress Bar HUD Text(Event Player, Global.BuilderProgressBarValue, Custom String("OPTIMIZING DATA"), Top, 1, Color(Green),
-			Color(Green), Visible To and Values, Default Visibility);
-		Global.BuilderProgressBarValueStep = 100 / Count Of(Global.BuilderNodePositions);
-		Global.NodePositions = Empty Array;
-		Global.DistanceMatrix = Empty Array;
-		Global.NodeConnections = Empty Array;
-		Global.BuildProjectEmptySpace = 0;
-		Global.BuildProjectOldElementIndex = 0;
-		Global.BuildProjectNewElementIndex = 0;
-		"BEGIN PROCESS"
-		For Global Variable(LoopIterator1, 0, Count Of(Global.BuilderNodePositions), 1);
-			Global.BuilderProgressBarValue += Global.BuilderProgressBarValueStep;
-			"SKIP DELETED NODE (ACCUMULATE SPACE BETWEEN INDEXES)"
-			If(Global.BuilderNodePositions[Global.LoopIterator1] == False);
-				Global.BuildProjectEmptySpace += 1;
-				"ANTI-CRASH DELAY"
-				disabled Wait(0.030, Ignore Condition);
-				Continue;
-			End;
-			Global.BuildProjectOldElementIndex = Global.LoopIterator1;
-			Global.BuildProjectNewElementIndex = Global.BuildProjectEmptySpace == 0 ? Global.LoopIterator1 : Global.LoopIterator1 - Global.BuildProjectEmptySpace;
-			"CONNECTIONS OF CURRENT NODE"
-			Global.BuilderInnerArray = Global.BuilderNodeConnections[Global.BuildProjectOldElementIndex];
-			"WRITE ONLY RESULT INTO INSPECTOR"
-			Enable Inspector Recording;
-			Global.NodeConnections[Global.BuildProjectNewElementIndex] = Global.BuilderInnerArray;
-			Modify Global Variable(NodePositions, Append To Array, Global.BuilderNodePositions[Global.BuildProjectOldElementIndex]);
-			"DISABLE INSPECTOR WHILE COMPILING (WRITE RESULT ONLY)"
-			Skip If(!Global.OptimizedInspectorRecorder, 1);
-			Disable Inspector Recording;
-			"UPDATE INDEXES IN CONNECTION ARRAY"
-			If(Global.BuildProjectEmptySpace > 0 && Count Of(Global.NodeConnections) > 1);
-				Call Subroutine(BuilderUpdateConnectionIndexes);
-			End;
-			"ANTI-CRASH DELAY"
-			Wait(0.060, Ignore Condition);
-		End;
-		Destroy All Progress Bar HUD Text;
-		Enable Inspector Recording;
-	}
-}
-
-disabled rule("SUBROUTINE: COMPUTE DISTANCE MATRIX")
-{
-	event
-	{
-		Subroutine;
-		BuilderComputeDistanceMatrix;
-	}
-
-	actions
-	{
-		"INIT PROGRESS BAR"
-		Destroy All Progress Bar HUD Text;
-		Create Progress Bar HUD Text(All Players(All Teams), Global.BuilderProgressBarValue, Custom String("COMPUTING DISTANCE MATRIX..."),
-			Top, 1, Color(Purple), Color(Purple), Visible To and Values, Default Visibility);
-		Global.BuilderProgressBarValue = 0;
-		Global.BuilderProgressBarValueStep = 100 / Count Of(Global.NodeConnections);
-		"INIT DISTANCE MATRIX SIZE"
-		Global.DistanceMatrix[Count Of(Global.NodeConnections) - 1] = 0;
-		"CALCULATE ALL DISTANCES FOR EACH NODE"
-		For Global Variable(BuildProjectStartNodeId, 0, Count Of(Global.NodeConnections), 1);
-			"ALL DISTANCES FROM START NODE TO OTHERS"
-			Global.BuilderInnerArray = Empty Array;
-			Global.BuilderInnerArray[0] = 0;
-			"CLEAR QUEUE AND VISITED ARRAYES FOR EACH NODE"
-			Global.BuildProjectQueueArray = Empty Array;
-			Global.BuildProjectVisitedNodes = Empty Array;
-			"PUT THE START NODE IN QUEUE AND MAKE IT VISITED"
-			Modify Global Variable(BuildProjectQueueArray, Append To Array, Global.BuildProjectStartNodeId);
-			Modify Global Variable(BuildProjectVisitedNodes, Append To Array, Global.BuildProjectStartNodeId);
-			"VISIT ALL NODES"
-			While(Count Of(Global.BuildProjectQueueArray) > 0);
-				"POP FIRST NODE FROM QUEUE"
-				Global.BuildProjectCurrentNodeId = Global.BuildProjectQueueArray[0];
-				Modify Global Variable(BuildProjectQueueArray, Remove From Array By Index, 0);
-				"VISIT NEIGHBOR NODES"
-				For Global Variable(LoopIterator1, 0, Count Of(Global.NodeConnections[Global.BuildProjectCurrentNodeId]), 1);
-					Global.BuildProjectNeighborNodeId = Global.NodeConnections[Global.BuildProjectCurrentNodeId][Global.LoopIterator1];
-					If(!Array Contains(Global.BuildProjectVisitedNodes, Global.BuildProjectNeighborNodeId));
-						"ADD NEIGHBOR IN QUEUE AND MARK IT AS VISITED"
-						Modify Global Variable(BuildProjectQueueArray, Append To Array, Global.BuildProjectNeighborNodeId);
-						Modify Global Variable(BuildProjectVisitedNodes, Append To Array, Global.BuildProjectNeighborNodeId);
-						"ACCUMULATE DISTANCE TO NEIGHBOR"
-						Global.BuilderInnerArray[Global.BuildProjectNeighborNodeId] = Global.BuilderInnerArray[Global.BuildProjectCurrentNodeId] + 1;
-					End;
-				End;
-				"ANTI-CRASH DELAY"
-				Wait(0.100, Ignore Condition);
-			End;
-			"WRITE ONLY RESULT INTO INSPECTOR"
-			Enable Inspector Recording;
-			"ADD RESULT IN DISTANCE MATRIX"
-			Global.DistanceMatrix[Global.BuildProjectStartNodeId] = Global.BuilderInnerArray;
-			"DISABLE INSPECTOR WHILE COMPILING (WRITE RESULT ONLY)"
-			Skip If(!Global.OptimizedInspectorRecorder, 1);
-			Disable Inspector Recording;
-			Global.BuilderProgressBarValue += Global.BuilderProgressBarValueStep;
-		End;
-		Destroy All Progress Bar HUD Text;
 	}
 }
 
@@ -2446,7 +2313,7 @@ rule("SUBROUTINE: CREATE NODE BEAM EFFECTS")
 	}
 }
 
-disabled rule("SUBROUTINE: PATH FINDING DRAW SHORTEST PATH")
+disabled rule("SUBROUTINE: PATH FINDING DRAW SHORTEST PATH (MAYBE I WILL REPAIR THIS FEATURE IN NEXT UPDATES, BUT NOW ITS BROKEN)")
 {
 	event
 	{
@@ -2482,7 +2349,7 @@ disabled rule("SUBROUTINE: PATH FINDING DRAW SHORTEST PATH")
 	}
 }
 
-rule("SUBROUTINE: PATH FINDING CREATE TEST BOT")
+rule("SUBROUTINE: PATH FINDING CREATE BOT")
 {
 	event
 	{
@@ -2504,9 +2371,11 @@ rule("SUBROUTINE: PATH FINDING CREATE TEST BOT")
 		End;
 		Call Subroutine(PathFindingTestBotReset);
 		"ANTI-BUG DELAY"
-		Wait(0.100, Ignore Condition);
+		Wait(0.200, Ignore Condition);
 		Global.PathFindingBotId.BotTargetPosition = Global.PathFindingTargetPosition;
+		"FOLLOW PLAYER CONSTANTLY"
 		disabled Global.PathFindingBotId.BotTargetPlayer = Event Player;
+		disabled Global.PathFindingBotId.BotIsFollowTargetConstantly = True;
 	}
 }
 
@@ -2540,6 +2409,13 @@ rule("BOT: INIT")
 			Update Every Frame(Event Player.BotNextNodePosition + Vector(0, 0.700, 0)), Color(Green), Visible To Position and Radius);
 		Create Effect(All Players(All Teams), Sphere, Color(Green), Event Player.BotNextNodePosition + Vector(0, 0.700, 0), 0.150,
 			Visible To Position and Radius);
+		"PIT DETECTOR"
+		Create Beam Effect(All Players(All Teams), Bad Beam, Event Player.BotTempVar1[0], Ray Cast Hit Position(
+			Event Player.BotTempVar1[0], Event Player.BotTempVar1[0] + Vector(0, -5, 0), Null, Event Player, False), Color(Orange),
+			Visible To Position and Radius);
+		Create Beam Effect(All Players(All Teams), Bad Beam, Event Player.BotTempVar1[1], Ray Cast Hit Position(
+			Event Player.BotTempVar1[1], Event Player.BotTempVar1[1] + Vector(0, -5, 0), Null, Event Player, False), Color(Orange),
+			Visible To Position and Radius);
 		Create HUD Text(All Players(All Teams), Custom String("TEST BOT INFO\r\nCLOSEST NODE: {0}\r\nCLOSEST NODE IN LOS: {1}\r\n{2}",
 			Index Of Array Value(Global.NodePositions, Sorted Array(Global.NodePositions, Distance Between(Position Of(Event Player),
 			Current Array Element))[0]), Index Of Array Value(Global.NodePositions, Sorted Array(Filtered Array(Global.NodePositions,
@@ -2565,8 +2441,11 @@ rule("SUBROUTINE: TEST BOT RESET")
 	actions
 	{
 		Global.PathFindingBotId.BotPrevNodeId = -1;
+		Global.PathFindingBotId.BotNextNodeId = -1;
 		Global.PathFindingBotId.BotTargetPlayer = -1;
 		Global.PathFindingBotId.BotTargetPosition = -1;
+		Global.PathFindingBotId.BotClosestNodeIdToBot = -1;
+		Global.PathFindingBotId.BotClosestNodeIdToTarget = -1;
 		Global.PathFindingBotId.BotIsPathFinding = False;
 		Global.PathFindingBotId.BotCancelPathFinding = False;
 		Stop Facing(Global.PathFindingBotId);
