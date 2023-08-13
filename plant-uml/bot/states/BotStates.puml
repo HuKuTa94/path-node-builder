@@ -20,46 +20,39 @@ Idle -left-> FindClosestNodeIdToTarget : [BotTargetPlayer != -1] or\n[BotTargetP
 FindClosestNodeIdToTarget --> FindClosestNodeIdToBot : [BotClosestNodeIdToTarget = -1]
 FindClosestNodeIdToBot --> FindNextNodeId : [BotClosestNodeIdToBot != -1]
 
-state "Find next\nnode Id in path" as FindNextNodeId {
+state "Find next\nposition in path" as FindNextNodeId {
     state BeginPathFindingChoice <<choice>>
-    [*] --> BeginPathFindingChoice
-    state BotCanSeeNextNodeChoice <<choice>>
-    state BotJustBeganPathFindingChoice <<choice>>
     state BotFolowPathChoice <<choice>>
-    state BotNextNodePositionYComponentChoice <<choice>>
+    [*] --> BotFolowPathChoice
+    state BotPrevNodeIdChoice <<choice>>
+    state BotNextNodeIsTargetChoice <<choice>>
     state "Move to closest\nnode position to bot" as MoveToClosestNodeToBot
     state "Move to next\nnode position in path" as MoveToNextNodeInPath
     state "Move to target\nposition" as MoveToTargetPosition
     state "Follow to\nnext position" as FollowToNextPosition
-    state Join1 <<join>>
+    state JoinClosestNode <<join>>
+    state JoinNextNode <<join>>
     state Join2 <<join>>
 
-    'Choice next node position
-    'Bot just began pathfinding
-    BeginPathFindingChoice -right-> BotJustBeganPathFindingChoice : Bot just\nbegan pathfindng\n[BotPrevNodeId = -1]
-    BotJustBeganPathFindingChoice --> BotCanSeeNextNodeChoice : Bot can see\nnext position
-    BotJustBeganPathFindingChoice --> MoveToClosestNodeToBot : Bot can't see\nnext position
-    BotCanSeeNextNodeChoice --> MoveToClosestNodeToBot : Next position is\nhigher than bot's position
-    BotCanSeeNextNodeChoice --> Join1 : Next position is not\nhigher than bot's position
-'    Join1 --> MoveToClosestNodeToBot : Next position is\nhigher than bot's position
-'    Join1 --> MoveToNextNodeInPath : Next position is not\nhigher than bot's position
+    'Bot just begun follow path
+    BotFolowPathChoice --> BeginPathFindingChoice : Next node\nis not target
+    BeginPathFindingChoice --> JoinClosestNode : Bot just begun\nfollow path\n[BotPrevNodeId == -1]\n&&\nNext position is\nhigher than bot's position\n|| \nCan't see\nnext position
+    BeginPathFindingChoice --> JoinNextNode : Else
+    JoinClosestNode --> MoveToClosestNodeToBot
 
-    'Bot follow path already
-    BeginPathFindingChoice -left-> BotFolowPathChoice : Bot following path\n[BotPrevNodeId != -1]
-    BotFolowPathChoice --> Join1 : Next position\n is not a target
-    BotFolowPathChoice -left-> BotNextNodePositionYComponentChoice : Next position\n is a target
-    BotNextNodePositionYComponentChoice --> MoveToTargetPosition : Target position is not\nhigher than bot's position
-    BotNextNodePositionYComponentChoice --> Join1 : Target position is\nhigher than bot's position
+    BotFolowPathChoice -left-> BotNextNodeIsTargetChoice : Next node\n is a target\n&&\nCan see\ntarget position
+    BotNextNodeIsTargetChoice --> MoveToTargetPosition : Target position is not\nhigher than bot's position
+    BotNextNodeIsTargetChoice --> BotPrevNodeIdChoice : Target position is\nhigher than bot's position\n&&\nDistance to next position\n closer than to target position
 
     'End pathfinding
-    Join1 --> MoveToNextNodeInPath
+    BotPrevNodeIdChoice --> JoinNextNode : Bot already\nfollow path\n[BotPrevNodeId != -1]
+    BotPrevNodeIdChoice --> JoinClosestNode : Bot just begun\nfollow path\n[BotPrevNodeId == -1]
+    JoinNextNode --> MoveToNextNodeInPath
     MoveToClosestNodeToBot --> Join2
     MoveToNextNodeInPath --> Join2
     MoveToTargetPosition --> Join2
     Join2 --> FollowToNextPosition
     FollowToNextPosition --> [*]
-'    FollowToNextPosition -up-> Init : Bot reached\ntarget
-'    FollowToNextPosition -left-> FindClosestNodeIdToTarget : Bot triggered\ntimestamp
 }
 
 
