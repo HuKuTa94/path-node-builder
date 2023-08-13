@@ -90,7 +90,7 @@ public class DistanceMatrixCalculator
     }
 
     /**
-     * Uni-direction nodes can has two values of distance. The method collapse these values into one float number
+     * Uni-direction nodes can have two values of distance. The method collapse these values into one float number
      * Example: number 1 and number 4 will be collapsed to float 1.4
      * It means that:
      * distance from node A to node B equals 1, node A are connected to node B
