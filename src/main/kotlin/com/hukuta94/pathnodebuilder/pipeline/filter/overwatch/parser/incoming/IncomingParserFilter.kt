@@ -19,7 +19,7 @@ internal class IncomingParserFilter : Function<String, ParsedIncomingData> {
                 // Raw string looks like: "    Global.BuilderNodePositions = Array(Vector(-16.004, 0.350, -15.965))"
                 val splitString = it.value.split('=')
 
-                splitString[0].withoutGlobalPrefix() to splitString[1].withoutOuterArray()
+                splitString[0].withoutGlobalPrefix() to splitString[1].unwrapArray()
             }
 
         if (globalVariables.size < VARIABLES_COUNT) {
@@ -31,7 +31,7 @@ internal class IncomingParserFilter : Function<String, ParsedIncomingData> {
 
         return ParsedIncomingData(
             builderNodePositions = parseBuilderNodePositions(globalVariables),
-            builderNodeConnections = emptyList()
+            builderNodeConnections = parseBuilderNodeConnections(globalVariables)
         )
     }
 
@@ -54,8 +54,28 @@ internal class IncomingParserFilter : Function<String, ParsedIncomingData> {
             .toList()
     }
 
+    private fun parseBuilderNodeConnections(globalVariables: Map<String, String>): List<List<Int>?> {
+        return globalVariables.builderNodeConnections()
+            .split(PATTERN_VARIABLE_VALUE_SPLITTER)
+            .asSequence()
+            .map { array ->
+                var value: List<Int>? = null
+                if (!array.startsWith('F')) { // skip "False" values and put as null
+                    value = array.unwrapArray()
+                        .split(", ")
+                        .asSequence()
+                        .map { it.toInt() }
+                        .toList()
+                }
+                value
+            }.toList()
+    }
+
     private fun Map<String, String>.builderNodePositions() =
         requireNotNull(this[BUILDER_NODE_POSITIONS_VAR_NAME])
+
+    private fun Map<String, String>.builderNodeConnections() =
+        requireNotNull(this[BUILDER_NODE_CONNECTIONS_VAR_NAME])
 
     /**
      * Removes "Global." prefix from string.
@@ -69,13 +89,13 @@ internal class IncomingParserFilter : Function<String, ParsedIncomingData> {
             .trim()
 
     /**
-     * Unwraps outer array.
+     * Unwraps array.
      *
      * Example:
      * String "Array(Vector(x, y, z), Vector(x, y, z))"
      * will be unwrapped to "Vector(x, y, z), Vector(x, y, z)"
      */
-    private fun String.withoutOuterArray() =
+    private fun String.unwrapArray() =
         this.substringAfter("Array(")
             .substringBeforeLast(')')
 

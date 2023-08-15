@@ -120,15 +120,13 @@ internal class IncomingParserFilterTest {
             Vector(2.000, 1.000, 20.051)
         )
 
-        val expectedNodeConnection: List<IntArray> = listOf(
-            intArrayOf(5, 1, 6),
-            intArrayOf(),
-            intArrayOf(1, 5, 3)
+        val expectedNodeConnection: List<List<Int>?> = listOf(
+            listOf(5, 1, 6),
+            null,
+            listOf(1, 5, 3)
         )
 
         assertEquals(expectedNodePositions, actualResult.builderNodePositions)
-
-        //TODO Имплементировать парсинг массива связей между нодами
         assertEquals(expectedNodeConnection, actualResult.builderNodeConnections)
     }
 }

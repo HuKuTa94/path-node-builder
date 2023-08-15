@@ -4,5 +4,9 @@ import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.Vector
 
 data class ParsedIncomingData(
     val builderNodePositions: List<Vector?>,
-    val builderNodeConnections: List<IntArray>
+
+    /**
+     * 2D Array of integers (int[][])
+     */
+    val builderNodeConnections: List<List<Int>?>
 )
