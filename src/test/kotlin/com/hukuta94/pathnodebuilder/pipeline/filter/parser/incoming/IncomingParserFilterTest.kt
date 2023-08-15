@@ -1,8 +1,8 @@
 package com.hukuta94.pathnodebuilder.pipeline.filter.parser.incoming
 
+import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.Vector
 import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.parser.incoming.IncomingParserFilter
 import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.parser.incoming.IncomingParserFilterException
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.parser.incoming.ParsedIncomingData
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
@@ -96,7 +96,7 @@ internal class IncomingParserFilterTest {
     }
 
     @Test
-    fun `should validate when raw data contains required variables with correct values`() {
+    fun `should parse succeed when raw data contains required variables with correct values`() {
         val rawIncomingData = """
             variables
             {
@@ -107,19 +107,28 @@ internal class IncomingParserFilterTest {
 
             actions
             {
-                Global.BuilderNodePositions = Array(Vector(-16.004, 0.350, -15.965));
-                Global.BuilderNodeConnections = Array(Array(5, 1, 6);
+                Global.BuilderNodePositions = Array(Vector(-16.004, 0.350, -15.965), False, Vector(2, 1, 20.051));
+                Global.BuilderNodeConnections = Array(Array(5, 1, 6), False, Array(1, 5, 3));
             }
             """.trimIndent()
 
         val actualResult = filter.apply(rawIncomingData)
 
-        val expectedResult = ParsedIncomingData(
-            mapOf(
-                "BuilderNodePositions" to "Array(Vector(-16.004, 0.350, -15.965))",
-                "BuilderNodeConnections" to "Array(Array(5, 1, 6)"
-            )
+        val expectedNodePositions = listOf(
+            Vector(-16.004, 0.350, -15.965),
+            null,
+            Vector(2.000, 1.000, 20.051)
         )
-        assertEquals(expectedResult, actualResult)
+
+        val expectedNodeConnection: List<IntArray> = listOf(
+            intArrayOf(5, 1, 6),
+            intArrayOf(),
+            intArrayOf(1, 5, 3)
+        )
+
+        assertEquals(expectedNodePositions, actualResult.builderNodePositions)
+
+        //TODO Имплементировать парсинг массива связей между нодами
+        assertEquals(expectedNodeConnection, actualResult.builderNodeConnections)
     }
 }
