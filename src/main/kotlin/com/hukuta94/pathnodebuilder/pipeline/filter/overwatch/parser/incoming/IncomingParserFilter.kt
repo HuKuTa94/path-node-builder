@@ -36,37 +36,39 @@ internal class IncomingParserFilter : Function<String, ParsedIncomingData> {
     }
 
     private fun parseBuilderNodePositions(globalVariables: Map<String, String>): List<Vector?> {
-        return globalVariables.builderNodePositions()
-            .split(PATTERN_VARIABLE_VALUE_SPLITTER)
-            .asSequence()
-            .map { vector ->
-                var value: Vector? = null
-                if (!vector.startsWith('F')) { // skip "False" values and put as null
-                    val coordinates = vector.splitCoordinates()
-                    value = Vector(
-                        x = coordinates[0].toDouble(),
-                        y = coordinates[1].toDouble(),
-                        z = coordinates[2].toDouble()
-                    )
-                }
-                value
-            }
-            .toList()
+        return parseGlobalVariable(globalVariables.builderNodePositions()) { vector ->
+            val coordinates = vector.splitCoordinates()
+                Vector(
+                    x = coordinates[0].toDouble(),
+                    y = coordinates[1].toDouble(),
+                    z = coordinates[2].toDouble()
+                )
+        }
     }
 
     private fun parseBuilderNodeConnections(globalVariables: Map<String, String>): List<List<Int>?> {
-        return globalVariables.builderNodeConnections()
+        return parseGlobalVariable(globalVariables.builderNodeConnections()) { array ->
+            array.unwrapArray()
+                .split(", ")
+                .asSequence()
+                .map { it.toInt() }
+                .toList()
+        }
+    }
+
+    private fun <T> parseGlobalVariable(
+        globalVariableValue: String,
+        parseFunction: (String) -> T
+    ): List<T?> {
+        return globalVariableValue
             .split(PATTERN_VARIABLE_VALUE_SPLITTER)
             .asSequence()
-            .map { array ->
-                var value: List<Int>? = null
-                if (!array.startsWith('F')) { // skip "False" values and put as null
-                    value = array.unwrapArray()
-                        .split(", ")
-                        .asSequence()
-                        .map { it.toInt() }
-                        .toList()
-                }
+            .map {
+                var value: T? = null
+
+                if (!it.startsWith('F'))
+                    value = parseFunction.invoke(it)
+
                 value
             }.toList()
     }
