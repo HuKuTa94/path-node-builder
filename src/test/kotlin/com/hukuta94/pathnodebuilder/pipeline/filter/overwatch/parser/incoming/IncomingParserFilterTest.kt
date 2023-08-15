@@ -1,8 +1,6 @@
-package com.hukuta94.pathnodebuilder.pipeline.filter.parser.incoming
+package com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.parser.incoming
 
 import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.Vector
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.parser.incoming.IncomingParserFilter
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.parser.incoming.IncomingParserFilterException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
