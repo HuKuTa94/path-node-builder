@@ -46,13 +46,14 @@ internal class IncomingParserFilter : Function<String, ParsedIncomingData> {
         }
     }
 
-    private fun parseBuilderNodeConnections(globalVariables: Map<String, String>): List<List<Int>?> {
+    private fun parseBuilderNodeConnections(globalVariables: Map<String, String>): List<IntArray?> {
         return parseGlobalVariable(globalVariables.builderNodeConnections()) { array ->
             array.unwrapArray()
                 .split(", ")
                 .asSequence()
                 .map { it.toInt() }
                 .toList()
+                .toIntArray()
         }
     }
 

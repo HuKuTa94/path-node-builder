@@ -8,5 +8,5 @@ data class ParsedIncomingData(
     /**
      * 2D Array of integers (int[][])
      */
-    val builderNodeConnections: List<List<Int>?>
+    val builderNodeConnections: List<IntArray?>
 )

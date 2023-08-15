@@ -4,6 +4,8 @@ import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.Vector
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 internal class IncomingParserFilterTest {
 
@@ -118,13 +120,33 @@ internal class IncomingParserFilterTest {
             Vector(2.000, 1.000, 20.051)
         )
 
-        val expectedNodeConnection: List<List<Int>?> = listOf(
-            listOf(5, 1, 6),
+        val expectedNodeConnection = listOf(
+            intArrayOf(5, 1, 6),
             null,
-            listOf(1, 5, 3)
+            intArrayOf(1, 5, 3)
         )
 
         assertEquals(expectedNodePositions, actualResult.builderNodePositions)
-        assertEquals(expectedNodeConnection, actualResult.builderNodeConnections)
+        assert2DIntArrayEquals(expectedNodeConnection, actualResult.builderNodeConnections)
+    }
+
+    private fun assert2DIntArrayEquals(expected: List<IntArray?>, actual: List<IntArray?>) {
+        assertEquals(expected.size, actual.size)
+
+        expected.forEachIndexed { i, expectedInts ->
+            val actualInts = actual[i]
+
+            if (expectedInts == null) {
+                assertNull(actualInts)
+            } else {
+                assertNotNull(actualInts)
+                assertEquals(expectedInts.size, actualInts.size)
+
+                expectedInts.forEachIndexed { j, expectedInt ->
+                    assertEquals(expectedInt, actualInts[j])
+                }
+            }
+
+        }
     }
 }
