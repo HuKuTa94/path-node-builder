@@ -5,11 +5,9 @@ import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVar
 import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.VARIABLES_COUNT
 import java.util.function.Function
 
-internal class IncomingParserFilter : Function<RawIncomingData, ParsedIncomingData> {
+internal class IncomingParserFilter : Function<String, ParsedIncomingData> {
 
-    override fun apply(input: RawIncomingData): ParsedIncomingData {
-        val rawData = input.value
-
+    override fun apply(rawData: String): ParsedIncomingData {
         if (rawData.isBlank()) {
             throw IncomingParserFilterException.EmptyRawDataException()
         }

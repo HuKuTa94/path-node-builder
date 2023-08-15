@@ -3,7 +3,6 @@ package com.hukuta94.pathnodebuilder.pipeline.filter.parser.incoming
 import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.parser.incoming.IncomingParserFilter
 import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.parser.incoming.IncomingParserFilterException
 import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.parser.incoming.ParsedIncomingData
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.parser.incoming.RawIncomingData
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
@@ -14,13 +13,13 @@ internal class IncomingParserFilterTest {
 
     @Test
     fun `should be error when raw data is empty`() {
-        assertThrows<IncomingParserFilterException.EmptyRawDataException> { filter.apply(RawIncomingData("")) }
-        assertThrows<IncomingParserFilterException.EmptyRawDataException> { filter.apply(RawIncomingData(" ")) }
+        assertThrows<IncomingParserFilterException.EmptyRawDataException> { filter.apply("") }
+        assertThrows<IncomingParserFilterException.EmptyRawDataException> { filter.apply(" ") }
     }
 
     @Test
     fun `should be error when raw data does not contain required variables`() {
-        val rawIncomingData = RawIncomingData("""
+        val rawIncomingData = """
             variables
             {
                 global:
@@ -32,13 +31,13 @@ internal class IncomingParserFilterTest {
                 Global.NotRequiredVariableName = False;
             }
             """.trimIndent()
-        )
+
         assertThrows<IncomingParserFilterException.NoRequiredVariablesException> { filter.apply(rawIncomingData) }
     }
 
     @Test
     fun `should be error when raw data contains required variables with incorrect format`() {
-        val rawIncomingData = RawIncomingData("""
+        val rawIncomingData = """
             variables
             {
                 global:
@@ -52,13 +51,13 @@ internal class IncomingParserFilterTest {
                 Global.BuilderNodeConnections = 1;
             }
             """.trimIndent()
-        )
+
         assertThrows<IncomingParserFilterException.NoRequiredVariablesException> { filter.apply(rawIncomingData) }
     }
 
     @Test
     fun `should be error when raw data contains BuilderNodeConnections variable with incorrect format`() {
-        val rawIncomingData = RawIncomingData("""
+        val rawIncomingData = """
             variables
             {
                 global:
@@ -72,13 +71,13 @@ internal class IncomingParserFilterTest {
                 Global.BuilderNodeConnections = 1;
             }
             """.trimIndent()
-        )
+
         assertThrows<IncomingParserFilterException.NoRequiredVariablesException> { filter.apply(rawIncomingData) }
     }
 
     @Test
     fun `should be error when raw data contains BuilderNodePositions variable with incorrect format`() {
-        val rawIncomingData = RawIncomingData("""
+        val rawIncomingData = """
             variables
             {
                 global:
@@ -92,13 +91,13 @@ internal class IncomingParserFilterTest {
                 Global.BuilderNodeConnections = Array(Array(5, 1, 6);;
             }
             """.trimIndent()
-        )
+
         assertThrows<IncomingParserFilterException.NoRequiredVariablesException> { filter.apply(rawIncomingData) }
     }
 
     @Test
     fun `should validate when raw data contains required variables with correct values`() {
-        val rawIncomingData = RawIncomingData("""
+        val rawIncomingData = """
             variables
             {
                 global:
@@ -112,7 +111,6 @@ internal class IncomingParserFilterTest {
                 Global.BuilderNodeConnections = Array(Array(5, 1, 6);
             }
             """.trimIndent()
-        )
 
         val actualResult = filter.apply(rawIncomingData)
 
