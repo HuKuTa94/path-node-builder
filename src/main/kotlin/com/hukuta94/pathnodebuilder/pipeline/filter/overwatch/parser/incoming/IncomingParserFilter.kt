@@ -36,7 +36,7 @@ internal class IncomingParserFilter : Function<String, ParsedIncomingData> {
     }
 
     private fun parseBuilderNodePositions(globalVariables: Map<String, String>): List<Vector?> {
-        return requireNotNull(globalVariables[BUILDER_NODE_POSITIONS_VAR_NAME])
+        return globalVariables.builderNodePositions()
             .split(PATTERN_VARIABLE_VALUE_SPLITTER)
             .asSequence()
             .map { vector ->
@@ -53,6 +53,9 @@ internal class IncomingParserFilter : Function<String, ParsedIncomingData> {
             }
             .toList()
     }
+
+    private fun Map<String, String>.builderNodePositions() =
+        requireNotNull(this[BUILDER_NODE_POSITIONS_VAR_NAME])
 
     /**
      * Removes "Global." prefix from string.
