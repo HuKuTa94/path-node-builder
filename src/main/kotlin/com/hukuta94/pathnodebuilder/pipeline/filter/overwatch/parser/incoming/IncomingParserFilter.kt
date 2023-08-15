@@ -1,5 +1,8 @@
 package com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.parser.incoming
 
+import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.BUILDER_NODE_CONNECTIONS_VAR_NAME
+import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.BUILDER_NODE_POSITIONS_VAR_NAME
+import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.VARIABLES_COUNT
 import java.util.function.Function
 
 internal class IncomingParserFilter : Function<RawIncomingData, ParsedIncomingData> {
@@ -21,7 +24,7 @@ internal class IncomingParserFilter : Function<RawIncomingData, ParsedIncomingDa
                 splitString[0].substringAfter('.').trim() to splitString[1].trim()
             }
 
-        if (parsedIncomingData.size < COUNT_OF_REQUIRED_VARIABLES) {
+        if (parsedIncomingData.size < VARIABLES_COUNT) {
             throw IncomingParserFilterException.NoRequiredVariablesException(
                 BUILDER_NODE_POSITIONS_VAR_NAME,
                 BUILDER_NODE_CONNECTIONS_VAR_NAME
@@ -32,10 +35,6 @@ internal class IncomingParserFilter : Function<RawIncomingData, ParsedIncomingDa
     }
 
     companion object {
-        private const val COUNT_OF_REQUIRED_VARIABLES = 2
-        private const val BUILDER_NODE_POSITIONS_VAR_NAME = "BuilderNodePositions"
-        private const val BUILDER_NODE_CONNECTIONS_VAR_NAME = "BuilderNodeConnections"
-
         private val PATTERN_REQUIRED_VARIABLES = Regex(
             pattern = " ?\\s*Global\\.BuilderNode(Positions|Connections)\\s*=\\s*Array\\((?<array>[aA-zZ,(\\-\\d.\\s)]+)",
             option = RegexOption.MULTILINE
