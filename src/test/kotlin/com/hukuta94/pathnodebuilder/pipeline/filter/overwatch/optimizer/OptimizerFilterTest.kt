@@ -66,9 +66,9 @@ internal class OptimizerFilterTest {
             /* 4 */ intArrayOf(2, 3)
         )
 
-        assertEquals(expectedPositions.size, actualResult.builderNodePositions.size)
-        assertEquals(expectedPositions, actualResult.builderNodePositions)
-        assert2DIntArrayEquals(expectedConnections, actualResult.builderNodeConnections)
+        assertEquals(expectedPositions.size, actualResult.positions.size)
+        assertEquals(expectedPositions, actualResult.positions)
+        assert2DIntArrayEquals(expectedConnections, actualResult.connections)
     }
 
     @Test
@@ -117,9 +117,9 @@ internal class OptimizerFilterTest {
             /* 2 */ intArrayOf(1)
         )
 
-        assertEquals(expectedPositions.size, actualResult.builderNodePositions.size)
-        assertEquals(expectedPositions, actualResult.builderNodePositions)
-        assert2DIntArrayEquals(expectedConnections, actualResult.builderNodeConnections)
+        assertEquals(expectedPositions.size, actualResult.positions.size)
+        assertEquals(expectedPositions, actualResult.positions)
+        assert2DIntArrayEquals(expectedConnections, actualResult.connections)
     }
 
     @Test
@@ -146,9 +146,9 @@ internal class OptimizerFilterTest {
         val actualResult = filter.apply(parsedIncomingData)
 
         // Then
-        assertEquals(builderNodePositions.size, actualResult.builderNodePositions.size)
-        assertEquals(builderNodePositions, actualResult.builderNodePositions)
-        assert2DIntArrayEquals(builderNodeConnections, actualResult.builderNodeConnections)
+        assertEquals(builderNodePositions.size, actualResult.positions.size)
+        assertEquals(builderNodePositions, actualResult.positions)
+        assert2DIntArrayEquals(builderNodeConnections, actualResult.connections)
     }
 
     private fun assert2DIntArrayEquals(expected: List<IntArray>, actual: List<IntArray>) {

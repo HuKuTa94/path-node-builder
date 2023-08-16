@@ -1,12 +1,13 @@
 package com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.optimizer
 
+import com.hukuta94.pathnodebuilder.pipeline.filter.calculator.DistanceMatrixData
 import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.Vector
 import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.parser.incoming.ParsedIncomingData
 import java.util.function.Function
 
-class OptimizerFilter : Function<ParsedIncomingData, OptimizedIncomingData> {
+class OptimizerFilter : Function<ParsedIncomingData, DistanceMatrixData> {
 
-    override fun apply(incomingData: ParsedIncomingData): OptimizedIncomingData {
+    override fun apply(incomingData: ParsedIncomingData): DistanceMatrixData {
         val inputPositions = incomingData.builderNodePositions
         val inputConnections = incomingData.builderNodeConnections
 
@@ -76,9 +77,10 @@ class OptimizerFilter : Function<ParsedIncomingData, OptimizedIncomingData> {
             }
         }
 
-        return OptimizedIncomingData(
-            builderNodePositions = outputPositions.mapNotNull { it },
-            builderNodeConnections = outputConnections.mapNotNull { it }
+        return DistanceMatrixData(
+            positions = outputPositions.mapNotNull { it },
+            connections = outputConnections.mapNotNull { it },
+            matrix = emptyList()
         )
     }
 }
