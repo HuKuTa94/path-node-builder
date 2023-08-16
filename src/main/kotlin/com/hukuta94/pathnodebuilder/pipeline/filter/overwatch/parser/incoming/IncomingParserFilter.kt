@@ -38,20 +38,23 @@ internal class IncomingParserFilter : Function<String, ParsedIncomingData> {
     private fun parseBuilderNodePositions(globalVariables: Map<String, String>): List<Vector?> {
         return parseGlobalVariable(globalVariables.builderNodePositions()) { vector ->
             val coordinates = vector.splitCoordinates()
-                Vector(
-                    x = coordinates[0].toDouble(),
-                    y = coordinates[1].toDouble(),
-                    z = coordinates[2].toDouble()
-                )
+            Vector(
+                x = coordinates[0].toDouble(),
+                y = coordinates[1].toDouble(),
+                z = coordinates[2].toDouble()
+            )
         }
     }
 
     private fun parseBuilderNodeConnections(globalVariables: Map<String, String>): List<IntArray?> {
         return parseGlobalVariable(globalVariables.builderNodeConnections()) { array ->
             array.unwrapArray()
-                .split(", ")
+                .split(PATTERN_ARRAY_ELEMENT_SPLITTER)
                 .asSequence()
-                .map { it.toInt() }
+                .map {
+                    it.trim()
+                      .toInt()
+                }
                 .toList()
                 .toIntArray()
         }
@@ -111,10 +114,14 @@ internal class IncomingParserFilter : Function<String, ParsedIncomingData> {
      *
      * @return array of coordinates
      */
-    private fun String.splitCoordinates() =
-        this.substringAfter("Vector(")
-            .substringBeforeLast(')')
-            .split(", ")
+    private fun String.splitCoordinates(): List<String> {
+        val matchResult = requireNotNull(PATTERN_SPLIT_VECTOR_TO_COORDS.find(this))
+
+        return matchResult.groupValues.let {
+            // skip the first matched result because it contains whole string (all coordinates)
+            it.subList(1, it.size)
+        }
+    }
 
     companion object {
         private val PATTERN_REQUIRED_VARIABLES = Regex(
@@ -124,6 +131,14 @@ internal class IncomingParserFilter : Function<String, ParsedIncomingData> {
 
         private val PATTERN_VARIABLE_VALUE_SPLITTER = Regex(
             ",\\s*(?=[FAV])"
+        )
+
+        private val PATTERN_SPLIT_VECTOR_TO_COORDS = Regex(
+            "(-?\\d+\\.?\\d+)\\s*,\\s*(-?\\d+\\.?\\d+)\\s*,\\s*(-?\\d+\\.?\\d+)"
+        )
+
+        private val PATTERN_ARRAY_ELEMENT_SPLITTER = Regex(
+            ",\\s*"
         )
     }
 }
