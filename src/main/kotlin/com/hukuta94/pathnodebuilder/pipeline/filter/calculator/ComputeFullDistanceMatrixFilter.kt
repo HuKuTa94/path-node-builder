@@ -10,7 +10,7 @@ class ComputeFullDistanceMatrixFilter : Function<DistanceMatrixData, DistanceMat
         val outputConnections = input.connections
 
         val distanceMatrix = Array(outputPositions.size) {
-            IntArray(
+            DoubleArray(
                 outputPositions.size
             )
         }

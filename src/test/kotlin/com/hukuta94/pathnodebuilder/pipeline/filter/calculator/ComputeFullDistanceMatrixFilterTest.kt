@@ -41,19 +41,19 @@ internal class ComputeFullDistanceMatrixFilterTest {
 
         // Then:
         val expectedDistanceMatrix = listOf(
-            intArrayOf(0, 1, 2, 2, 2, 1, 1, 2),
-            intArrayOf(1, 0, 1, 2, 3, 2, 2, 3),
-            intArrayOf(2, 1, 0, 1, 2, 3, 2, 3),
-            intArrayOf(2, 2, 1, 0, 1, 2, 1, 2),
-            intArrayOf(2, 3, 2, 1, 0, 1, 2, 1),
-            intArrayOf(1, 2, 3, 2, 1, 0, 2, 1),
-            intArrayOf(1, 2, 2, 1, 2, 2, 0, 1),
-            intArrayOf(2, 3, 3, 2, 1, 1, 1, 0)
+            doubleArrayOf(0.0, 1.0, 2.0, 2.0, 2.0, 1.0, 1.0, 2.0),
+            doubleArrayOf(1.0, 0.0, 1.0, 2.0, 3.0, 2.0, 2.0, 3.0),
+            doubleArrayOf(2.0, 1.0, 0.0, 1.0, 2.0, 3.0, 2.0, 3.0),
+            doubleArrayOf(2.0, 2.0, 1.0, 0.0, 1.0, 2.0, 1.0, 2.0),
+            doubleArrayOf(2.0, 3.0, 2.0, 1.0, 0.0, 1.0, 2.0, 1.0),
+            doubleArrayOf(1.0, 2.0, 3.0, 2.0, 1.0, 0.0, 2.0, 1.0),
+            doubleArrayOf(1.0, 2.0, 2.0, 1.0, 2.0, 2.0, 0.0, 1.0),
+            doubleArrayOf(2.0, 3.0, 3.0, 2.0, 1.0, 1.0, 1.0, 0.0)
         )
-        assert2DIntArrayEquals(expectedDistanceMatrix, actualResult.matrix)
+        assert2DArrayEquals(expectedDistanceMatrix, actualResult.matrix)
     }
 
-    private fun assert2DIntArrayEquals(expected: List<IntArray>, actual: List<IntArray>) {
+    private fun assert2DArrayEquals(expected: List<DoubleArray>, actual: List<DoubleArray>) {
         assertEquals(expected.size, actual.size)
 
         expected.forEachIndexed { i, expectedInts ->
