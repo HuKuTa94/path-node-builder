@@ -11,7 +11,7 @@ import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.OverwatchGlobalVa
 import java.util.StringJoiner
 import java.util.function.Function
 
-class OutgoingParserFilter : Function<DistanceMatrixDto, String> {
+class OutgoingSnippetParserFilter : Function<DistanceMatrixDto, String> {
     override fun apply(input: DistanceMatrixDto): String {
         val builder = StringJoiner("\n")
 

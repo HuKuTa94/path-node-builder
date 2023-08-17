@@ -5,7 +5,7 @@ import com.hukuta94.pathnodebuilder.pipeline.dto.DistanceMatrixDto
 import com.hukuta94.pathnodebuilder.pipeline.dto.ParsedIncomingDto
 import java.util.function.Function
 
-class OptimizerFilter : Function<ParsedIncomingDto, DistanceMatrixDto> {
+class NormalizerFilter : Function<ParsedIncomingDto, DistanceMatrixDto> {
 
     override fun apply(incomingData: ParsedIncomingDto): DistanceMatrixDto {
         val inputPositions = incomingData.builderNodePositions

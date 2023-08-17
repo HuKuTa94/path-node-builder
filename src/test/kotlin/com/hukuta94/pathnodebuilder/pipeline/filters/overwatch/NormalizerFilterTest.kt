@@ -1,15 +1,14 @@
-package com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.optimizer
+package com.hukuta94.pathnodebuilder.pipeline.filters.overwatch
 
-import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.OptimizerFilter
 import com.hukuta94.pathnodebuilder.pipeline.common.Vector
 import com.hukuta94.pathnodebuilder.pipeline.dto.ParsedIncomingDto
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-internal class OptimizerFilterTest {
+internal class NormalizerFilterTest {
 
-    private val filter = OptimizerFilter()
+    private val filter = NormalizerFilter()
 
     @Test
     fun `should remove null values from arrays and recalculate indexes`() {

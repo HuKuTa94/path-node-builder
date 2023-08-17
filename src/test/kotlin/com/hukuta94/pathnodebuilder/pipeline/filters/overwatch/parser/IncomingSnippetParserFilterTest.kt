@@ -1,7 +1,7 @@
-package com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.parser.incoming
+package com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.parser
 
-import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.IncomingParserFilter
-import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.IncomingParserFilterException
+import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.IncomingSnippetParserFilter
+import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.IncomingSnippetParserFilterException
 import com.hukuta94.pathnodebuilder.pipeline.common.Vector
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -9,14 +9,14 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
-internal class IncomingParserFilterTest {
+internal class IncomingSnippetParserFilterTest {
 
-    private val filter = IncomingParserFilter()
+    private val filter = IncomingSnippetParserFilter()
 
     @Test
     fun `should be error when raw data is empty`() {
-        assertThrows<IncomingParserFilterException.EmptyRawDataException> { filter.apply("") }
-        assertThrows<IncomingParserFilterException.EmptyRawDataException> { filter.apply(" ") }
+        assertThrows<IncomingSnippetParserFilterException.EmptyRawDataExceptionSnippet> { filter.apply("") }
+        assertThrows<IncomingSnippetParserFilterException.EmptyRawDataExceptionSnippet> { filter.apply(" ") }
     }
 
     @Test
@@ -34,7 +34,7 @@ internal class IncomingParserFilterTest {
             }
             """.trimIndent()
 
-        assertThrows<IncomingParserFilterException.NoRequiredVariablesException> { filter.apply(rawIncomingData) }
+        assertThrows<IncomingSnippetParserFilterException.NoRequiredVariablesExceptionSnippet> { filter.apply(rawIncomingData) }
     }
 
     @Test
@@ -54,7 +54,7 @@ internal class IncomingParserFilterTest {
             }
             """.trimIndent()
 
-        assertThrows<IncomingParserFilterException.NoRequiredVariablesException> { filter.apply(rawIncomingData) }
+        assertThrows<IncomingSnippetParserFilterException.NoRequiredVariablesExceptionSnippet> { filter.apply(rawIncomingData) }
     }
 
     @Test
@@ -74,7 +74,7 @@ internal class IncomingParserFilterTest {
             }
             """.trimIndent()
 
-        assertThrows<IncomingParserFilterException.NoRequiredVariablesException> { filter.apply(rawIncomingData) }
+        assertThrows<IncomingSnippetParserFilterException.NoRequiredVariablesExceptionSnippet> { filter.apply(rawIncomingData) }
     }
 
     @Test
@@ -94,7 +94,7 @@ internal class IncomingParserFilterTest {
             }
             """.trimIndent()
 
-        assertThrows<IncomingParserFilterException.NoRequiredVariablesException> { filter.apply(rawIncomingData) }
+        assertThrows<IncomingSnippetParserFilterException.NoRequiredVariablesExceptionSnippet> { filter.apply(rawIncomingData) }
     }
 
     @Test

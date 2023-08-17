@@ -6,11 +6,11 @@ import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.OverwatchGlobalVa
 import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.OverwatchGlobalVariables.INPUT_NODE_POSITIONS_VAR_NAME
 import java.util.function.Function
 
-class IncomingParserFilter : Function<String, ParsedIncomingDto> {
+class IncomingSnippetParserFilter : Function<String, ParsedIncomingDto> {
 
     override fun apply(rawData: String): ParsedIncomingDto {
         if (rawData.isBlank()) {
-            throw IncomingParserFilterException.EmptyRawDataException()
+            throw IncomingSnippetParserFilterException.EmptyRawDataExceptionSnippet()
         }
 
         val matchResultIterator = PATTERN_REQUIRED_INPUT_VARIABLES.findAll(rawData).iterator()
@@ -23,7 +23,7 @@ class IncomingParserFilter : Function<String, ParsedIncomingDto> {
             }
 
         if (globalVariables.size < COUNT_OF_REQUIRED_INPUT_VARIABLES) {
-            throw IncomingParserFilterException.NoRequiredVariablesException(
+            throw IncomingSnippetParserFilterException.NoRequiredVariablesExceptionSnippet(
                 INPUT_NODE_POSITIONS_VAR_NAME,
                 INPUT_NODE_CONNECTIONS_VAR_NAME
             )

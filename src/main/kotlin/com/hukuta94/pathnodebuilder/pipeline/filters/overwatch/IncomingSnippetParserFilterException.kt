@@ -1,15 +1,15 @@
 package com.hukuta94.pathnodebuilder.pipeline.filters.overwatch
 
-sealed class IncomingParserFilterException(
+sealed class IncomingSnippetParserFilterException(
     override val message: String
 ) : RuntimeException() {
 
-    class EmptyRawDataException : IncomingParserFilterException("Raw data can not be empty")
+    class EmptyRawDataExceptionSnippet : IncomingSnippetParserFilterException("Raw data can not be empty")
 
-    class NoRequiredVariablesException(
+    class NoRequiredVariablesExceptionSnippet(
         builderNodePositionsVarName: String,
         builderNodeConnectionsVarName: String
-    ) : IncomingParserFilterException(
+    ) : IncomingSnippetParserFilterException(
         """
         Raw data does not contain variables 
         'Global.$builderNodePositionsVarName' and/or 'Global.$builderNodeConnectionsVarName', or

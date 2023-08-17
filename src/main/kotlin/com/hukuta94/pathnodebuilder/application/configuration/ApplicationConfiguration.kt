@@ -6,9 +6,9 @@ import com.hukuta94.pathnodebuilder.pipeline.ComputeDistanceMatrixForOverwatchPi
 import com.hukuta94.pathnodebuilder.pipeline.filters.calculator.ComputeFullDistanceMatrixFilter
 import com.hukuta94.pathnodebuilder.pipeline.filters.calculator.RemoveLowerMatrixDiagonalFilter
 import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.ProcessUniDirectionNodesFilter
-import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.OptimizerFilter
-import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.IncomingParserFilter
-import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.OutgoingParserFilter
+import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.NormalizerFilter
+import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.IncomingSnippetParserFilter
+import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.OutgoingSnippetParserFilter
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -19,10 +19,10 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
 @EnableAutoConfiguration
 open class ApplicationConfiguration {
     @Bean
-    open fun incomingParserFilter() = IncomingParserFilter()
+    open fun incomingSnippetParserFilter() = IncomingSnippetParserFilter()
 
     @Bean
-    open fun optimizerFilter() = OptimizerFilter()
+    open fun normalizerFilter() = NormalizerFilter()
 
     @Bean
     open fun computeFullDistanceMatrixFilter() = ComputeFullDistanceMatrixFilter()
@@ -34,16 +34,16 @@ open class ApplicationConfiguration {
     open fun removeLowerMatrixDiagonalFilter() = RemoveLowerMatrixDiagonalFilter()
 
     @Bean
-    open fun outgoingParserFilter() = OutgoingParserFilter()
+    open fun outgoingSnippetParserFilter() = OutgoingSnippetParserFilter()
 
     @Bean
     open fun computeDistanceMatrixForOverwatchPipeline() = ComputeDistanceMatrixForOverwatchPipeline(
-        incomingParserFilter = incomingParserFilter(),
-        optimizerFilter = optimizerFilter(),
+        incomingSnippetParserFilter = incomingSnippetParserFilter(),
+        normalizerFilter = normalizerFilter(),
         computeFullDistanceMatrixFilter = computeFullDistanceMatrixFilter(),
         processUniDirectionNodesFilter = processUniDirectionNodesFilter(),
         removeLowerMatrixDiagonalFilter = removeLowerMatrixDiagonalFilter(),
-        outgoingParserFilter = outgoingParserFilter()
+        outgoingSnippetParserFilter = outgoingSnippetParserFilter()
     )
 
     @Bean
