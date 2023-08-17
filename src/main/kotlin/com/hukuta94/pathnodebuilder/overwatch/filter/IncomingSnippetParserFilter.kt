@@ -110,17 +110,18 @@ class IncomingSnippetParserFilter : Function<String, GlobalvariablesDto> {
      *
      * Example:
      * String "Vector(1, 2, 3)"
-     * will be unwrapped to Array {1, 2, 3}
+     * will be unwrapped to list of ("1", "2", "3")
      *
      * @return array of coordinates
      */
     private fun String.splitCoordinates(): List<String> {
-        val matchResult = requireNotNull(PATTERN_SPLIT_VECTOR_TO_COORDS.find(this))
+        val matchResult = requireNotNull(PATTERN_SPLIT_VECTOR_TO_COORDS.findAll(this))
 
-        return matchResult.groupValues.let {
-            // skip the first matched result because it contains whole string (all coordinates)
-            it.subList(1, it.size)
-        }
+        return matchResult.iterator()
+            .asSequence()
+            .map {
+                it.value
+            }.toList()
     }
 
     companion object {
@@ -136,7 +137,7 @@ class IncomingSnippetParserFilter : Function<String, GlobalvariablesDto> {
         )
 
         private val PATTERN_SPLIT_VECTOR_TO_COORDS = Regex(
-            "(-?\\d+\\.?\\d+)\\s*,\\s*(-?\\d+\\.?\\d+)\\s*,\\s*(-?\\d+\\.?\\d+)"
+            "(-?\\d+\\.?\\d{0,3})\\s*"
         )
 
         private val PATTERN_ARRAY_ELEMENT_SPLITTER = Regex(
