@@ -1,4 +1,4 @@
-package com.hukuta94.pathnodebuilder.adapter.web
+package com.hukuta94.pathnodebuilder.adapter.overwatch.web
 
 import com.hukuta94.pathnodebuilder.pipeline.ComputeDistanceMatrixForOverwatchPipeline
 import org.springframework.beans.factory.annotation.Autowired

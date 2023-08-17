@@ -1,7 +1,7 @@
 package com.hukuta94.pathnodebuilder.application.configuration
 
-import com.hukuta94.pathnodebuilder.adapter.web.PresentationController
-import com.hukuta94.pathnodebuilder.adapter.web.RestController
+import com.hukuta94.pathnodebuilder.adapter.overwatch.web.PresentationController
+import com.hukuta94.pathnodebuilder.adapter.overwatch.web.RestController
 import com.hukuta94.pathnodebuilder.pipeline.ComputeDistanceMatrixForOverwatchPipeline
 import com.hukuta94.pathnodebuilder.pipeline.filters.calculator.ComputeFullDistanceMatrixFilter
 import com.hukuta94.pathnodebuilder.pipeline.filters.calculator.RemoveLowerMatrixDiagonalFilter
