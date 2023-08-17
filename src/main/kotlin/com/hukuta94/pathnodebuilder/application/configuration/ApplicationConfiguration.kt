@@ -4,7 +4,7 @@ import com.hukuta94.pathnodebuilder.overwatch.adapter.`in`.web.PresentationContr
 import com.hukuta94.pathnodebuilder.overwatch.adapter.`in`.web.RestController
 import com.hukuta94.pathnodebuilder.overwatch.application.ComputeDistanceMatrixPipeline
 import com.hukuta94.pathnodebuilder.calculator.filter.ComputeUnitDistanceMatrixFilter
-import com.hukuta94.pathnodebuilder.overwatch.filter.RemoveLowerMatrixDiagonalFilter
+import com.hukuta94.pathnodebuilder.overwatch.filter.RemoveBottomSymmetricalPartOfMatrixFilter
 import com.hukuta94.pathnodebuilder.overwatch.filter.ProcessUniDirectionNodesFilter
 import com.hukuta94.pathnodebuilder.overwatch.filter.NormalizerFilter
 import com.hukuta94.pathnodebuilder.overwatch.filter.IncomingSnippetParserFilter
@@ -31,7 +31,7 @@ open class ApplicationConfiguration {
     open fun processUniDirectionNodesFilter() = ProcessUniDirectionNodesFilter()
 
     @Bean
-    open fun removeLowerMatrixDiagonalFilter() = RemoveLowerMatrixDiagonalFilter()
+    open fun removeBottomSymmetricalPartOfMatrixFilter() = RemoveBottomSymmetricalPartOfMatrixFilter()
 
     @Bean
     open fun outgoingSnippetParserFilter() = OutgoingSnippetParserFilter()
@@ -42,7 +42,7 @@ open class ApplicationConfiguration {
         normalizerFilter = normalizerFilter(),
         computeUnitDistanceMatrixFilter = computeUnitDistanceMatrixFilter(),
         processUniDirectionNodesFilter = processUniDirectionNodesFilter(),
-        removeLowerMatrixDiagonalFilter = removeLowerMatrixDiagonalFilter(),
+        removeBottomSymmetricalPartOfMatrixFilter = removeBottomSymmetricalPartOfMatrixFilter(),
         outgoingSnippetParserFilter = outgoingSnippetParserFilter()
     )
 

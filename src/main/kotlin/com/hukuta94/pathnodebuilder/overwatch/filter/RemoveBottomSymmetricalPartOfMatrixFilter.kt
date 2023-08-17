@@ -4,8 +4,7 @@ import com.hukuta94.pathnodebuilder.calculator.filter.dto.DistanceMatrixDto
 import java.util.function.Function
 
 /**
- * Removes diagonal zero elements and half of the bottom part of computed distance matrix.
- * Leaves only upper diagonal.
+ * Removes zero elements of main diagonal and bottom symmetrical part of distance matrix.
  *
  * Example
  * - Input distance matrix:
@@ -19,7 +18,7 @@ import java.util.function.Function
  *    - (   1, 2)
  *    - (      1)
  */
-class RemoveLowerMatrixDiagonalFilter : Function<DistanceMatrixDto, DistanceMatrixDto> {
+class RemoveBottomSymmetricalPartOfMatrixFilter : Function<DistanceMatrixDto, DistanceMatrixDto> {
 
     override fun apply(input: DistanceMatrixDto): DistanceMatrixDto {
         val matrix = input.matrix

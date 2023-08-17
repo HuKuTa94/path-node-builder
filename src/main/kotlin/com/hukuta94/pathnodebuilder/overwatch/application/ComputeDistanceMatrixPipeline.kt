@@ -3,7 +3,7 @@ package com.hukuta94.pathnodebuilder.overwatch.application
 import com.hukuta94.pathnodebuilder.calculator.filter.ComputeUnitDistanceMatrixFilter
 import com.hukuta94.pathnodebuilder.common.Pipeline
 import com.hukuta94.pathnodebuilder.overwatch.application.port.`in`.ComputeDistanceMatrixUseCase
-import com.hukuta94.pathnodebuilder.overwatch.filter.RemoveLowerMatrixDiagonalFilter
+import com.hukuta94.pathnodebuilder.overwatch.filter.RemoveBottomSymmetricalPartOfMatrixFilter
 import com.hukuta94.pathnodebuilder.overwatch.filter.ProcessUniDirectionNodesFilter
 import com.hukuta94.pathnodebuilder.overwatch.filter.NormalizerFilter
 import com.hukuta94.pathnodebuilder.overwatch.filter.IncomingSnippetParserFilter
@@ -15,7 +15,7 @@ class ComputeDistanceMatrixPipeline constructor(
     normalizerFilter: NormalizerFilter,
     computeUnitDistanceMatrixFilter: ComputeUnitDistanceMatrixFilter,
     processUniDirectionNodesFilter: ProcessUniDirectionNodesFilter,
-    removeLowerMatrixDiagonalFilter: RemoveLowerMatrixDiagonalFilter,
+    removeBottomSymmetricalPartOfMatrixFilter: RemoveBottomSymmetricalPartOfMatrixFilter,
     outgoingSnippetParserFilter: OutgoingSnippetParserFilter
 ) : Pipeline<String, String>, ComputeDistanceMatrixUseCase {
 
@@ -24,7 +24,7 @@ class ComputeDistanceMatrixPipeline constructor(
             .andThen(normalizerFilter)
             .andThen(computeUnitDistanceMatrixFilter)
             .andThen(processUniDirectionNodesFilter)
-            .andThen(removeLowerMatrixDiagonalFilter)
+            .andThen(removeBottomSymmetricalPartOfMatrixFilter)
             .andThen(outgoingSnippetParserFilter)
 
     override fun execute(input: String): String {

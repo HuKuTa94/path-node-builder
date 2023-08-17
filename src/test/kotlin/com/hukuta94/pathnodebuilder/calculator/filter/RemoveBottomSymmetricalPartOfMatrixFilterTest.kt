@@ -1,13 +1,13 @@
 package com.hukuta94.pathnodebuilder.calculator.filter
 
-import com.hukuta94.pathnodebuilder.overwatch.filter.RemoveLowerMatrixDiagonalFilter
+import com.hukuta94.pathnodebuilder.overwatch.filter.RemoveBottomSymmetricalPartOfMatrixFilter
 import com.hukuta94.pathnodebuilder.calculator.filter.dto.DistanceMatrixDto
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 
-internal class RemoveLowerMatrixDiagonalFilterTest {
+internal class RemoveBottomSymmetricalPartOfMatrixFilterTest {
 
-    private val filter = RemoveLowerMatrixDiagonalFilter()
+    private val filter = RemoveBottomSymmetricalPartOfMatrixFilter()
 
     @Test
     fun `should remove lower diagonal from full computed distance matrix`() {
