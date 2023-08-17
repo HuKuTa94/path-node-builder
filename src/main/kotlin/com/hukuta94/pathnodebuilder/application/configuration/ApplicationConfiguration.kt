@@ -1,14 +1,14 @@
 package com.hukuta94.pathnodebuilder.application.configuration
 
-import com.hukuta94.pathnodebuilder.adapter.overwatch.web.PresentationController
-import com.hukuta94.pathnodebuilder.adapter.overwatch.web.RestController
-import com.hukuta94.pathnodebuilder.pipeline.ComputeDistanceMatrixForOverwatchPipeline
-import com.hukuta94.pathnodebuilder.pipeline.filters.calculator.ComputeFullDistanceMatrixFilter
-import com.hukuta94.pathnodebuilder.pipeline.filters.calculator.RemoveLowerMatrixDiagonalFilter
-import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.ProcessUniDirectionNodesFilter
-import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.NormalizerFilter
-import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.IncomingSnippetParserFilter
-import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.OutgoingSnippetParserFilter
+import com.hukuta94.pathnodebuilder.overwatch.adapter.`in`.web.PresentationController
+import com.hukuta94.pathnodebuilder.overwatch.adapter.`in`.web.RestController
+import com.hukuta94.pathnodebuilder.overwatch.application.ComputeDistanceMatrixPipeline
+import com.hukuta94.pathnodebuilder.calculator.filter.ComputeUnitDistanceMatrixFilter
+import com.hukuta94.pathnodebuilder.overwatch.filter.RemoveLowerMatrixDiagonalFilter
+import com.hukuta94.pathnodebuilder.overwatch.filter.ProcessUniDirectionNodesFilter
+import com.hukuta94.pathnodebuilder.overwatch.filter.NormalizerFilter
+import com.hukuta94.pathnodebuilder.overwatch.filter.IncomingSnippetParserFilter
+import com.hukuta94.pathnodebuilder.overwatch.filter.OutgoingSnippetParserFilter
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -25,7 +25,7 @@ open class ApplicationConfiguration {
     open fun normalizerFilter() = NormalizerFilter()
 
     @Bean
-    open fun computeFullDistanceMatrixFilter() = ComputeFullDistanceMatrixFilter()
+    open fun computeUnitDistanceMatrixFilter() = ComputeUnitDistanceMatrixFilter()
 
     @Bean
     open fun processUniDirectionNodesFilter() = ProcessUniDirectionNodesFilter()
@@ -37,17 +37,17 @@ open class ApplicationConfiguration {
     open fun outgoingSnippetParserFilter() = OutgoingSnippetParserFilter()
 
     @Bean
-    open fun computeDistanceMatrixForOverwatchPipeline() = ComputeDistanceMatrixForOverwatchPipeline(
+    open fun computeDistanceMatrixPipeline() = ComputeDistanceMatrixPipeline(
         incomingSnippetParserFilter = incomingSnippetParserFilter(),
         normalizerFilter = normalizerFilter(),
-        computeFullDistanceMatrixFilter = computeFullDistanceMatrixFilter(),
+        computeUnitDistanceMatrixFilter = computeUnitDistanceMatrixFilter(),
         processUniDirectionNodesFilter = processUniDirectionNodesFilter(),
         removeLowerMatrixDiagonalFilter = removeLowerMatrixDiagonalFilter(),
         outgoingSnippetParserFilter = outgoingSnippetParserFilter()
     )
 
     @Bean
-    open fun restController() = RestController(computeDistanceMatrixForOverwatchPipeline())
+    open fun restController() = RestController(computeDistanceMatrixPipeline())
 
     @Bean
     open fun presentationController() = PresentationController()
