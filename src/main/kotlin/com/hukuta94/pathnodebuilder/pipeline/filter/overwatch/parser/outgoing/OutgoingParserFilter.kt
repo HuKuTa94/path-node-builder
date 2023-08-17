@@ -8,136 +8,115 @@ import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVar
 import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.OUTPUT_NODE_POSITIONS_VAR_INDEX
 import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.OUTPUT_NODE_POSITIONS_VAR_NAME
 import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.Vector
+import java.util.StringJoiner
 import java.util.function.Function
 
 class OutgoingParserFilter : Function<DistanceMatrixData, String> {
-
     override fun apply(input: DistanceMatrixData): String {
-        val outputPositions = input.positions
-        val outputConnections = input.connections
-        val distanceMatrix = input.matrix
+        val builder = StringJoiner("\n")
 
-        val builder = StringBuilder()
-        // Variables block
-        builder.append("variables\n{\n\tglobal:\n\t\t")
-        builder.append(OUTPUT_NODE_POSITIONS_VAR_INDEX)
-        builder.append(": ")
-        builder.append(OUTPUT_NODE_POSITIONS_VAR_NAME)
-        builder.append("\n\t\t")
-        builder.append(OUTPUT_NODE_CONNECTIONS_VAR_INDEX)
-        builder.append(": ")
-        builder.append(OUTPUT_NODE_CONNECTIONS_VAR_NAME)
-        builder.append("\n\t\t")
-        builder.append(OUTPUT_DISTANCE_MATRIX_VAR_INDEX)
-        builder.append(": ")
-        builder.append(OUTPUT_DISTANCE_MATRIX_VAR_NAME)
-
-        // Actions block
-        builder.append("\n}\nactions\n{\n")
-
-        // Node positions
-        builder.append("\tGlobal.")
-        builder.append(OUTPUT_NODE_POSITIONS_VAR_NAME)
-        builder.append(" =\n")
-        convertNodePositions(builder, outputPositions)
-        builder.append("\n")
-
-        // Node connections
-        builder.append("\tGlobal.")
-        builder.append(OUTPUT_NODE_CONNECTIONS_VAR_NAME)
-        builder.append(" =\n")
-        convert2DArray(builder, outputConnections)
-        builder.append("\n")
-
-        // Distance matrix
-        builder.append("\tGlobal.")
-        builder.append(OUTPUT_DISTANCE_MATRIX_VAR_NAME)
-        builder.append(" =\n")
-        convertMatrix(builder, distanceMatrix)
-        builder.append("\n}\n")
+        builder.add(VARIABLE_BLOCK)
+        builder.add(buildActionBlock(input))
 
         return builder.toString()
     }
 
-    private fun convertNodePositions(builder: StringBuilder, elements: List<Vector>) {
-        val elementsSize = elements.size
-        if (elementsSize == 0) {
-            builder.append("\t\tArray();")
-            return
-        }
+    private fun buildActionBlock(distanceMatrixData: DistanceMatrixData) = """
+actions
+{
+    Global.${OUTPUT_NODE_POSITIONS_VAR_NAME} = ${convertNodePositions(distanceMatrixData.positions)}
+    Global.${OUTPUT_NODE_CONNECTIONS_VAR_NAME} = ${convertNodeConnections(distanceMatrixData.connections)}
+    Global.${OUTPUT_DISTANCE_MATRIX_VAR_NAME} = ${convertDistanceMatrix(distanceMatrixData.matrix)}
+}
+""".trimMargin()
 
-        // Begin fill array
-        builder.append("\t\tArray(\n")
-        for (i in 0 until elementsSize) {
-            builder.append("\t\t\tVector(")
-            builder.append(elements[i].x)
-            builder.append(", ")
-            builder.append(elements[i].y)
-            builder.append(", ")
-            builder.append(elements[i].z)
-            builder.append(")")
-
-            // Dont put ", " if it is the last element
-            if (i != elementsSize - 1) {
-                builder.append(",\n")
-            }
+    private fun convertNodePositions(elements: List<Vector>): String {
+        return convertToString(elements) { i ->
+            "Vector(${elements[i].x}, ${elements[i].y}, ${elements[i].z})"
         }
-        builder.append(");")
     }
 
-    private fun convert2DArray(builder: StringBuilder, elements: List<IntArray>) {
-        val elementsSize = elements.size
-        if (elementsSize == 0) {
-            builder.append("\t\tArray();")
-            return
-        }
+    private fun convertNodeConnections(elements: List<IntArray>): String {
+        return convertToString(elements) { i ->
+            val builder = StringBuilder()
+            builder.append("Array(")
 
-        // Begin fill array
-        builder.append("\t\tArray(\n")
-        for (i in 0 until elementsSize) {
-            builder.append("\t\t\tArray(")
             for (j in elements[i].indices) {
                 builder.append(elements[i][j])
                 if (j != elements[i].size - 1) {
+                    //TODO лучше заюзать StringJoiner
                     builder.append(", ")
                 } else {
                     builder.append(")")
                 }
             }
+
+            builder.toString()
+        }
+    }
+
+    private fun convertDistanceMatrix(elements: List<DoubleArray>): String {
+        return convertToString(elements) { i ->
+            val builder = StringBuilder()
+            builder.append("Array(")
+
+            for (j in elements[i].indices) {
+                builder.append(elements[i][j])
+                if (j != elements[i].size - 1) {
+                    //TODO лучше заюзать StringJoiner
+                    builder.append(", ")
+                } else {
+                    builder.append(")")
+                }
+            }
+
+            builder.toString()
+        }
+    }
+
+    /**
+     * Converts list of elements into string of Overwatch Workshop format
+     */
+    private fun <T> convertToString(
+        elements: List<T>,
+        convertFunction: (elementIndex: Int) -> String
+    ): String {
+        val elementsSize = elements.size
+        if (elementsSize == 0) {
+            return EMPTY_ARRAY
+        }
+
+        // Begin fill array
+        val builder = StringBuilder()
+        builder.append("Array(\n")
+
+        val lastElementIndex = elementsSize - 1
+        for (i in 0 until elementsSize) {
+            builder.append(
+                "\t\t${convertFunction.invoke(i)}"
+            )
 
             // Don't put ", " if it is the last element
-            if (i != elementsSize - 1) {
+            if (i != lastElementIndex) {
                 builder.append(",\n")
             }
         }
         builder.append(");")
+
+        return builder.toString()
     }
 
-    private fun convertMatrix(builder: StringBuilder, elements: List<DoubleArray>) {
-        val elementsSize = elements.size
-        if (elementsSize == 0) {
-            builder.append("\t\tArray();")
-            return
+    companion object {
+        private val VARIABLE_BLOCK = """
+        variables
+        {
+            global:
+                $OUTPUT_NODE_POSITIONS_VAR_INDEX: $OUTPUT_NODE_POSITIONS_VAR_NAME
+                $OUTPUT_NODE_CONNECTIONS_VAR_INDEX: $OUTPUT_NODE_CONNECTIONS_VAR_NAME
+                $OUTPUT_DISTANCE_MATRIX_VAR_INDEX: $OUTPUT_DISTANCE_MATRIX_VAR_NAME
         }
+    """.trimIndent()
 
-        // Begin fill array
-        builder.append("\t\tArray(\n")
-        for (i in 0 until elementsSize) {
-            builder.append("\t\t\tArray(")
-            for (j in elements[i].indices) {
-                builder.append(elements[i][j])
-                if (j != elements[i].size - 1) {
-                    builder.append(", ")
-                } else {
-                    builder.append(")")
-                }
-            }
-
-            // Dont put ", " if it is the last element
-            if (i != elementsSize - 1) {
-                builder.append(",\n")
-            }
-        }
-        builder.append(");")
+        private const val EMPTY_ARRAY = "Array();"
     }
 }
