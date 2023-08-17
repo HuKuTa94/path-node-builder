@@ -1,6 +1,6 @@
-package com.hukuta94.pathnodebuilder.pipeline.filter.overwatch
+package com.hukuta94.pathnodebuilder.pipeline.filters.overwatch
 
-import com.hukuta94.pathnodebuilder.pipeline.filter.calculator.DistanceMatrixData
+import com.hukuta94.pathnodebuilder.pipeline.dto.DistanceMatrixDto
 import java.util.function.Function
 
 /**
@@ -12,9 +12,9 @@ import java.util.function.Function
  * distance from node A to node B equals 1, node A are connected to node B
  * distance from node B to node A equals 4, node B aren't connected to node A
  */
-class ProcessUniDirectionNodesFilter : Function<DistanceMatrixData, DistanceMatrixData> {
+class ProcessUniDirectionNodesFilter : Function<DistanceMatrixDto, DistanceMatrixDto> {
 
-    override fun apply(input: DistanceMatrixData): DistanceMatrixData {
+    override fun apply(input: DistanceMatrixDto): DistanceMatrixDto {
         val matrix = input.matrix
         val matrixSize = matrix.size
         val newMatrix = Array(matrixSize) {

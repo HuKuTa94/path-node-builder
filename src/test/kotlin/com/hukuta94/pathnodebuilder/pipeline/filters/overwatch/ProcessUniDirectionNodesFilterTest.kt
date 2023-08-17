@@ -1,6 +1,6 @@
-package com.hukuta94.pathnodebuilder.pipeline.filter.overwatch
+package com.hukuta94.pathnodebuilder.pipeline.filters.overwatch
 
-import com.hukuta94.pathnodebuilder.pipeline.filter.calculator.DistanceMatrixData
+import com.hukuta94.pathnodebuilder.pipeline.dto.DistanceMatrixDto
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
@@ -11,7 +11,7 @@ internal class ProcessUniDirectionNodesFilterTest {
     @Test
     fun `should combine two numbers of upper and lower of diagonal into one float number`() {
         // Given
-        val computedDistanceMatrix = DistanceMatrixData(
+        val computedDistanceMatrix = DistanceMatrixDto(
             positions = emptyList(),
             connections = emptyList(),
             matrix = listOf(

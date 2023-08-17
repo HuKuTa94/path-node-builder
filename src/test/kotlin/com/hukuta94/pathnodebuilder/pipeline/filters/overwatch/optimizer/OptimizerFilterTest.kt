@@ -1,7 +1,8 @@
-package com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.optimizer
+package com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.optimizer
 
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.Vector
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.parser.incoming.ParsedIncomingData
+import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.OptimizerFilter
+import com.hukuta94.pathnodebuilder.pipeline.common.Vector
+import com.hukuta94.pathnodebuilder.pipeline.dto.ParsedIncomingDto
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -39,13 +40,13 @@ internal class OptimizerFilterTest {
             /* 8 */ null
         )
 
-        val parsedIncomingData = ParsedIncomingData(
+        val parsedIncomingDto = ParsedIncomingDto(
             builderNodePositions = builderNodePositions,
             builderNodeConnections = builderNodeConnections
         )
 
         // When
-        val actualResult = filter.apply(parsedIncomingData)
+        val actualResult = filter.apply(parsedIncomingDto)
 
         // Then
         val expectedPositions = listOf(
@@ -94,13 +95,13 @@ internal class OptimizerFilterTest {
             /* 5 */ intArrayOf(2)
         )
 
-        val parsedIncomingData = ParsedIncomingData(
+        val parsedIncomingDto = ParsedIncomingDto(
             builderNodePositions = builderNodePositions,
             builderNodeConnections = builderNodeConnections
         )
 
         // When
-        val actualResult = filter.apply(parsedIncomingData)
+        val actualResult = filter.apply(parsedIncomingDto)
 
         // Then
         val expectedPositions = listOf(
@@ -137,13 +138,13 @@ internal class OptimizerFilterTest {
             /* 1 */ intArrayOf(0),
         )
 
-        val parsedIncomingData = ParsedIncomingData(
+        val parsedIncomingDto = ParsedIncomingDto(
             builderNodePositions = builderNodePositions,
             builderNodeConnections = builderNodeConnections
         )
 
         // When
-        val actualResult = filter.apply(parsedIncomingData)
+        val actualResult = filter.apply(parsedIncomingDto)
 
         // Then
         assertEquals(builderNodePositions.size, actualResult.positions.size)

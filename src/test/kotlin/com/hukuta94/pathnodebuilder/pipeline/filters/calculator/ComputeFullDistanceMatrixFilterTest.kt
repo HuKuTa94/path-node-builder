@@ -1,6 +1,7 @@
-package com.hukuta94.pathnodebuilder.pipeline.filter.calculator
+package com.hukuta94.pathnodebuilder.pipeline.filters.calculator
 
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.Vector
+import com.hukuta94.pathnodebuilder.pipeline.dto.DistanceMatrixDto
+import com.hukuta94.pathnodebuilder.pipeline.common.Vector
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -12,7 +13,7 @@ internal class ComputeFullDistanceMatrixFilterTest {
     @Test
     fun `should compute full distance matrix`() {
         // Given:
-        val distanceMatrixData = DistanceMatrixData(
+        val distanceMatrixDto = DistanceMatrixDto(
             positions = listOf(
                 Vector(-16.004, 0.350, -15.965),
                 Vector(-15.994, 0.350, -0.043),
@@ -37,7 +38,7 @@ internal class ComputeFullDistanceMatrixFilterTest {
         )
 
         // When:
-        val actualResult = filter.apply(distanceMatrixData)
+        val actualResult = filter.apply(distanceMatrixDto)
 
         // Then:
         val expectedDistanceMatrix = listOf(

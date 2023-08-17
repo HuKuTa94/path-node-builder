@@ -1,4 +1,4 @@
-package com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.parser.incoming
+package com.hukuta94.pathnodebuilder.pipeline.filters.overwatch
 
 sealed class IncomingParserFilterException(
     override val message: String

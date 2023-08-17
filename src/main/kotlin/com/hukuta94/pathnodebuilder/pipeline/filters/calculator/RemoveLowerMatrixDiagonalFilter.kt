@@ -1,5 +1,6 @@
-package com.hukuta94.pathnodebuilder.pipeline.filter.calculator
+package com.hukuta94.pathnodebuilder.pipeline.filters.calculator
 
+import com.hukuta94.pathnodebuilder.pipeline.dto.DistanceMatrixDto
 import java.util.function.Function
 
 /**
@@ -18,9 +19,9 @@ import java.util.function.Function
  *    - (   1, 2)
  *    - (      1)
  */
-class RemoveLowerMatrixDiagonalFilter : Function<DistanceMatrixData, DistanceMatrixData> {
+class RemoveLowerMatrixDiagonalFilter : Function<DistanceMatrixDto, DistanceMatrixDto> {
 
-    override fun apply(input: DistanceMatrixData): DistanceMatrixData {
+    override fun apply(input: DistanceMatrixDto): DistanceMatrixDto {
         val matrix = input.matrix
         val newMatrixSize = matrix.size - 1
 

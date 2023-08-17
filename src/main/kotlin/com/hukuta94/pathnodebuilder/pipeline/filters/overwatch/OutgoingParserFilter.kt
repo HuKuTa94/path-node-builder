@@ -1,18 +1,18 @@
-package com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.parser.outgoing
+package com.hukuta94.pathnodebuilder.pipeline.filters.overwatch
 
-import com.hukuta94.pathnodebuilder.pipeline.filter.calculator.DistanceMatrixData
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.OUTPUT_DISTANCE_MATRIX_VAR_INDEX
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.OUTPUT_DISTANCE_MATRIX_VAR_NAME
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.OUTPUT_NODE_CONNECTIONS_VAR_INDEX
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.OUTPUT_NODE_CONNECTIONS_VAR_NAME
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.OUTPUT_NODE_POSITIONS_VAR_INDEX
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.OUTPUT_NODE_POSITIONS_VAR_NAME
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.Vector
+import com.hukuta94.pathnodebuilder.pipeline.common.Vector
+import com.hukuta94.pathnodebuilder.pipeline.dto.DistanceMatrixDto
+import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.OverwatchGlobalVariables.OUTPUT_DISTANCE_MATRIX_VAR_INDEX
+import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.OverwatchGlobalVariables.OUTPUT_DISTANCE_MATRIX_VAR_NAME
+import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.OverwatchGlobalVariables.OUTPUT_NODE_CONNECTIONS_VAR_INDEX
+import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.OverwatchGlobalVariables.OUTPUT_NODE_CONNECTIONS_VAR_NAME
+import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.OverwatchGlobalVariables.OUTPUT_NODE_POSITIONS_VAR_INDEX
+import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.OverwatchGlobalVariables.OUTPUT_NODE_POSITIONS_VAR_NAME
 import java.util.StringJoiner
 import java.util.function.Function
 
-class OutgoingParserFilter : Function<DistanceMatrixData, String> {
-    override fun apply(input: DistanceMatrixData): String {
+class OutgoingParserFilter : Function<DistanceMatrixDto, String> {
+    override fun apply(input: DistanceMatrixDto): String {
         val builder = StringJoiner("\n")
 
         builder.add(VARIABLE_BLOCK)
@@ -21,12 +21,12 @@ class OutgoingParserFilter : Function<DistanceMatrixData, String> {
         return builder.toString()
     }
 
-    private fun buildActionBlock(distanceMatrixData: DistanceMatrixData) = """
+    private fun buildActionBlock(distanceMatrixDto: DistanceMatrixDto) = """
 actions
 {
-    Global.${OUTPUT_NODE_POSITIONS_VAR_NAME} = ${convertNodePositions(distanceMatrixData.positions)}
-    Global.${OUTPUT_NODE_CONNECTIONS_VAR_NAME} = ${convertNodeConnections(distanceMatrixData.connections)}
-    Global.${OUTPUT_DISTANCE_MATRIX_VAR_NAME} = ${convertDistanceMatrix(distanceMatrixData.matrix)}
+    Global.${OUTPUT_NODE_POSITIONS_VAR_NAME} = ${convertNodePositions(distanceMatrixDto.positions)}
+    Global.${OUTPUT_NODE_CONNECTIONS_VAR_NAME} = ${convertNodeConnections(distanceMatrixDto.connections)}
+    Global.${OUTPUT_DISTANCE_MATRIX_VAR_NAME} = ${convertDistanceMatrix(distanceMatrixDto.matrix)}
 }
 """.trimMargin()
 

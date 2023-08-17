@@ -1,4 +1,4 @@
-package com.hukuta94.pathnodebuilder.pipeline.filter.overwatch
+package com.hukuta94.pathnodebuilder.pipeline.filters.overwatch
 
 object OverwatchGlobalVariables {
     const val INPUT_NODE_POSITIONS_VAR_NAME = "BuilderNodePositions"

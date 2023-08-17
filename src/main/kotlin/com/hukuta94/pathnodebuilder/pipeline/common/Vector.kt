@@ -1,4 +1,4 @@
-package com.hukuta94.pathnodebuilder.pipeline.filter.overwatch
+package com.hukuta94.pathnodebuilder.pipeline.common
 
 data class Vector(
     val x: Double,

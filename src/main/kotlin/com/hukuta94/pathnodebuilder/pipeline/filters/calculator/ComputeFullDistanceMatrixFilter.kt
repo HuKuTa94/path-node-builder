@@ -1,11 +1,12 @@
-package com.hukuta94.pathnodebuilder.pipeline.filter.calculator
+package com.hukuta94.pathnodebuilder.pipeline.filters.calculator
 
+import com.hukuta94.pathnodebuilder.pipeline.dto.DistanceMatrixDto
 import java.util.*
 import java.util.function.Function
 
-class ComputeFullDistanceMatrixFilter : Function<DistanceMatrixData, DistanceMatrixData> {
+class ComputeFullDistanceMatrixFilter : Function<DistanceMatrixDto, DistanceMatrixDto> {
 
-    override fun apply(input: DistanceMatrixData): DistanceMatrixData {
+    override fun apply(input: DistanceMatrixDto): DistanceMatrixDto {
         val outputPositions = input.positions
         val outputConnections = input.connections
 

@@ -1,5 +1,6 @@
-package com.hukuta94.pathnodebuilder.pipeline.filter.calculator
+package com.hukuta94.pathnodebuilder.pipeline.filters.calculator
 
+import com.hukuta94.pathnodebuilder.pipeline.dto.DistanceMatrixDto
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 
@@ -10,7 +11,7 @@ internal class RemoveLowerMatrixDiagonalFilterTest {
     @Test
     fun `should remove lower diagonal from full computed distance matrix`() {
         // Given
-        val computedFullDistanceMatrix = DistanceMatrixData(
+        val computedFullDistanceMatrix = DistanceMatrixDto(
             positions = emptyList(),
             connections = emptyList(),
             matrix = listOf(

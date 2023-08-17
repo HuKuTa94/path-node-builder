@@ -1,13 +1,14 @@
-package com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.parser.incoming
+package com.hukuta94.pathnodebuilder.pipeline.filters.overwatch
 
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.INPUT_NODE_CONNECTIONS_VAR_NAME
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.INPUT_NODE_POSITIONS_VAR_NAME
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.Vector
+import com.hukuta94.pathnodebuilder.pipeline.common.Vector
+import com.hukuta94.pathnodebuilder.pipeline.dto.ParsedIncomingDto
+import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.OverwatchGlobalVariables.INPUT_NODE_CONNECTIONS_VAR_NAME
+import com.hukuta94.pathnodebuilder.pipeline.filters.overwatch.OverwatchGlobalVariables.INPUT_NODE_POSITIONS_VAR_NAME
 import java.util.function.Function
 
-class IncomingParserFilter : Function<String, ParsedIncomingData> {
+class IncomingParserFilter : Function<String, ParsedIncomingDto> {
 
-    override fun apply(rawData: String): ParsedIncomingData {
+    override fun apply(rawData: String): ParsedIncomingDto {
         if (rawData.isBlank()) {
             throw IncomingParserFilterException.EmptyRawDataException()
         }
@@ -28,7 +29,7 @@ class IncomingParserFilter : Function<String, ParsedIncomingData> {
             )
         }
 
-        return ParsedIncomingData(
+        return ParsedIncomingDto(
             builderNodePositions = parseBuilderNodePositions(globalVariables),
             builderNodeConnections = parseBuilderNodeConnections(globalVariables)
         )
