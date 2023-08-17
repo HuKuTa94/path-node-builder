@@ -1,19 +1,18 @@
 package com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.parser.incoming
 
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.BUILDER_NODE_CONNECTIONS_VAR_NAME
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.BUILDER_NODE_POSITIONS_VAR_NAME
-import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.VARIABLES_COUNT
+import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.INPUT_NODE_CONNECTIONS_VAR_NAME
+import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.INPUT_NODE_POSITIONS_VAR_NAME
 import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.Vector
 import java.util.function.Function
 
-internal class IncomingParserFilter : Function<String, ParsedIncomingData> {
+class IncomingParserFilter : Function<String, ParsedIncomingData> {
 
     override fun apply(rawData: String): ParsedIncomingData {
         if (rawData.isBlank()) {
             throw IncomingParserFilterException.EmptyRawDataException()
         }
 
-        val matchResultIterator = PATTERN_REQUIRED_VARIABLES.findAll(rawData).iterator()
+        val matchResultIterator = PATTERN_REQUIRED_INPUT_VARIABLES.findAll(rawData).iterator()
         val globalVariables = matchResultIterator.asSequence()
             .associate {
                 // Raw string looks like: "    Global.BuilderNodePositions = Array(Vector(-16.004, 0.350, -15.965))"
@@ -22,10 +21,10 @@ internal class IncomingParserFilter : Function<String, ParsedIncomingData> {
                 splitString[0].withoutGlobalPrefix() to splitString[1].unwrapArray()
             }
 
-        if (globalVariables.size < VARIABLES_COUNT) {
+        if (globalVariables.size < COUNT_OF_REQUIRED_INPUT_VARIABLES) {
             throw IncomingParserFilterException.NoRequiredVariablesException(
-                BUILDER_NODE_POSITIONS_VAR_NAME,
-                BUILDER_NODE_CONNECTIONS_VAR_NAME
+                INPUT_NODE_POSITIONS_VAR_NAME,
+                INPUT_NODE_CONNECTIONS_VAR_NAME
             )
         }
 
@@ -78,10 +77,10 @@ internal class IncomingParserFilter : Function<String, ParsedIncomingData> {
     }
 
     private fun Map<String, String>.builderNodePositions() =
-        requireNotNull(this[BUILDER_NODE_POSITIONS_VAR_NAME])
+        requireNotNull(this[INPUT_NODE_POSITIONS_VAR_NAME])
 
     private fun Map<String, String>.builderNodeConnections() =
-        requireNotNull(this[BUILDER_NODE_CONNECTIONS_VAR_NAME])
+        requireNotNull(this[INPUT_NODE_CONNECTIONS_VAR_NAME])
 
     /**
      * Removes "Global." prefix from string.
@@ -124,7 +123,9 @@ internal class IncomingParserFilter : Function<String, ParsedIncomingData> {
     }
 
     companion object {
-        private val PATTERN_REQUIRED_VARIABLES = Regex(
+        private const val COUNT_OF_REQUIRED_INPUT_VARIABLES = 2
+
+        private val PATTERN_REQUIRED_INPUT_VARIABLES = Regex(
             pattern = " ?\\s*Global\\.BuilderNode(Positions|Connections)\\s*=\\s*Array\\((?<array>[aA-zZ,(\\-\\d.\\s)]+)",
             option = RegexOption.MULTILINE
         )
