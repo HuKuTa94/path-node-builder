@@ -133,4 +133,19 @@
 		</plugins>
 	</build>
 
+	<profiles>
+		<profile>
+			<id>web-app</id>
+			<properties>
+				<spring.boot.mainclass>com.hukuta94.pathnodebuilder.application.PathNodeBuilderApplicationKt</spring.boot.mainclass>
+			</properties>
+		</profile>
+		<profile>
+			<id>desktop-app</id>
+			<properties>
+				<desktop.mainclass>com.hukuta94.pathnodebuilder.overwatch.adapter.in.desktop.DesktopApplicationKt</desktop.mainclass>
+			</properties>
+		</profile>
+	</profiles>
+
 </project>
