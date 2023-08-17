@@ -1,6 +1,12 @@
 package com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.parser.outgoing
 
 import com.hukuta94.pathnodebuilder.pipeline.filter.calculator.DistanceMatrixData
+import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.OUTPUT_DISTANCE_MATRIX_VAR_INDEX
+import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.OUTPUT_DISTANCE_MATRIX_VAR_NAME
+import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.OUTPUT_NODE_CONNECTIONS_VAR_INDEX
+import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.OUTPUT_NODE_CONNECTIONS_VAR_NAME
+import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.OUTPUT_NODE_POSITIONS_VAR_INDEX
+import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.OverwatchGlobalVariables.OUTPUT_NODE_POSITIONS_VAR_NAME
 import com.hukuta94.pathnodebuilder.pipeline.filter.overwatch.Vector
 import java.util.function.Function
 
@@ -14,38 +20,38 @@ class OutgoingParserFilter : Function<DistanceMatrixData, String> {
         val builder = StringBuilder()
         // Variables block
         builder.append("variables\n{\n\tglobal:\n\t\t")
-        builder.append("125")
+        builder.append(OUTPUT_NODE_POSITIONS_VAR_INDEX)
         builder.append(": ")
-        builder.append("NodePositions")
+        builder.append(OUTPUT_NODE_POSITIONS_VAR_NAME)
         builder.append("\n\t\t")
-        builder.append("126")
+        builder.append(OUTPUT_NODE_CONNECTIONS_VAR_INDEX)
         builder.append(": ")
-        builder.append("NodeConnections")
+        builder.append(OUTPUT_NODE_CONNECTIONS_VAR_NAME)
         builder.append("\n\t\t")
-        builder.append("127")
+        builder.append(OUTPUT_DISTANCE_MATRIX_VAR_INDEX)
         builder.append(": ")
-        builder.append("DistanceMatrix")
+        builder.append(OUTPUT_DISTANCE_MATRIX_VAR_NAME)
 
         // Actions block
         builder.append("\n}\nactions\n{\n")
 
         // Node positions
         builder.append("\tGlobal.")
-        builder.append("NodePositions")
+        builder.append(OUTPUT_NODE_POSITIONS_VAR_NAME)
         builder.append(" =\n")
         convertNodePositions(builder, outputPositions)
         builder.append("\n")
 
         // Node connections
         builder.append("\tGlobal.")
-        builder.append("NodeConnections")
+        builder.append(OUTPUT_NODE_CONNECTIONS_VAR_NAME)
         builder.append(" =\n")
         convert2DArray(builder, outputConnections)
         builder.append("\n")
 
         // Distance matrix
         builder.append("\tGlobal.")
-        builder.append("DistanceMatrix")
+        builder.append(OUTPUT_DISTANCE_MATRIX_VAR_NAME)
         builder.append(" =\n")
         convertMatrix(builder, distanceMatrix)
         builder.append("\n}\n")
