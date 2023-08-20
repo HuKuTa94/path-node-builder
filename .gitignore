@@ -58,3 +58,7 @@ build/
 
 ### Temp uploaded files ###
 contentFile.csv
+
+### Gradle ###
+.gradle
+gradle/
