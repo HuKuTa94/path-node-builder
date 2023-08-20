@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Path Node Builder Web App</title>
+    <style>
+        body {
+            background: rgb(255,237,230);
+            background: linear-gradient(0deg, rgba(255,237,230,1) 0%, rgba(252,214,213,1) 38%, rgba(151,164,199,1) 92%);
+        }
+
+        .title-block {
+            width: 50%;
+            margin: 20px auto;
+            font-family: Arial, Impact, sans-serif;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .title-text {
+            font-size: 18px;
+            color: #ffc460;
+            display: block;
+            text-shadow: 3px 3px 5px black;
+        }
+
+        .contacts-block {
+            width: 50%;
+            margin: 20px auto;
+            font-family: Arial, cursive, cursive;
+        }
+
+        .card {
+            width: 80%;
+            margin: 10px auto;
+            padding: 10px;
+            background-color: #514a4b;
+            box-shadow: 5px 5px 10px #0000005c;
+            border-radius: 10px;
+        }
+
+        .card-text-area {
+            width: 99%;
+            height: 250px;
+            display: block;
+            resize: none;
+            outline: none;
+        }
+
+        .card-button {
+            width: 35%;
+            height: 12%;
+            display: block;
+            align-self: stretch;
+            font-size: 14px;
+            font-family: Arial, Narrow, serif;
+            color: #fff;
+            background-color: #ff9c00;
+            border-color: #ff9c00;
+            outline: none;
+        }
+
+
+
+    </style>
+    <script>
+    // -------------------------------------------------- INITIALIZATION ---------------------------------------------------
+    let sourceTextArea;
+    let resultTextArea;
+
+    function onload() {
+        sourceTextArea = document.getElementById("source-text");
+        resultTextArea = document.getElementById("result-text");
+    }
+
+    // -------------------------------------------------- BROWSER METHODS --------------------------------------------------
+    function pasteTextFromClipboard() {
+        navigator.clipboard.readText()
+            .then(text => {
+                sourceTextArea.value = text;
+            })
+    }
+
+    function copyTextToClipboard() {
+        navigator.clipboard.writeText(resultTextArea.value);
+    }
+
+    // ---------------------------------------------------- API METHODS ----------------------------------------------------
+    function sendData() {
+        fetch("api/distance-matrix/", {
+            method: 'POST',
+            body: sourceTextArea.value,
+            headers: {'Content-Type': 'text/plain; charset=utf-8'},
+        })
+            .then(response => {
+                response.text().then(text => {
+                    resultTextArea.value = text;
+                })
+            })
+    }
+    </script>
+</head>
+<body onload="onload()">
+    <div class="title-block">
+        <h1 class="title-text">PATH NODE BUILDER WEB APP</h1>
+        by HuKuTa94
+    </div>
+    <div class="card">
+        <button onclick="pasteTextFromClipboard()" id="source-button" class="card-button" >PASTE FROM CLIPBOARD</button>
+        <label for="source-text"></label>
+        <textarea id="source-text" class="card-text-area"></textarea>
+    </div>
+    <div class="card">
+        <button onclick="sendData()" id="compute-button" class="card-button">COMPUTE DISTANCE MATRIX</button>
+        <label for="result-text"></label>
+        <textarea id="result-text" class="card-text-area"></textarea>
+        <button onclick="copyTextToClipboard()" id="result-button" class="card-button">COPY TO CLIPBOARD</button>
+    </div>
+    <div class="contacts-block">
+        Open source project<br>
+        <a href="https://github.com/HuKuTa94/path-node-builder">https://github.com/HuKuTa94/path-node-builder</a>
+        <br>
+        <a href="https://workshop.codes/QRD5A">https://workshop.codes/QRD5A</a>
+    </div>
+</body>
+</html>
