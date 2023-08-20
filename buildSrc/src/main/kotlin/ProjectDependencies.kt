@@ -8,7 +8,7 @@ import org.gradle.plugin.use.PluginDependenciesSpec
 import org.gradle.plugin.use.PluginDependencySpec
 
 fun PluginDependenciesSpec.commonPlugins() {
-    id("org.jetbrains.kotlin.jvm") version "1.9.0"
+    id("org.jetbrains.kotlin.jvm") version "1.6.10"
 }
 
 fun RepositoryHandler.commonRepositories() {
