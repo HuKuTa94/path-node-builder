@@ -13,3 +13,4 @@ include("overwatch:adapter:desktop")
 
 include("application")
 include("application:web")
+include("application:desktop")
