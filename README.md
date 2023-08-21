@@ -3,6 +3,9 @@
 Deployed on Heroku:
 https://peaceful-cove-76019.herokuapp.com/
 
+Desktop for Windows:
+https://drive.google.com/file/d/1DI_G8COmu9jP89FJkTqQ7aa4Q0q_80Z5/view?usp=drive_link
+
 Domain Driven Design - Единый язык
 
 Overwatch - название онлайн игры.
