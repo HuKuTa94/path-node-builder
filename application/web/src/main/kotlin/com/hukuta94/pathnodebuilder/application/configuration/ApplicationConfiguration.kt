@@ -2,7 +2,7 @@ package com.hukuta94.pathnodebuilder.application.configuration
 
 import com.hukuta94.pathnodebuilder.overwatch.adapter.`in`.web.PresentationController
 import com.hukuta94.pathnodebuilder.overwatch.adapter.`in`.web.RestController
-import com.hukuta94.pathnodebuilder.overwatch.application.ComputeDistanceMatrixPipeline
+import com.hukuta94.pathnodebuilder.overwatch.application.port.ComputeDistanceMatrixPipeline
 import com.hukuta94.pathnodebuilder.calculator.filter.ComputeUnitDistanceMatrixFilter
 import com.hukuta94.pathnodebuilder.overwatch.filter.RemoveBottomSymmetricalPartOfMatrixFilter
 import com.hukuta94.pathnodebuilder.overwatch.filter.ProcessUniDirectionNodesFilter

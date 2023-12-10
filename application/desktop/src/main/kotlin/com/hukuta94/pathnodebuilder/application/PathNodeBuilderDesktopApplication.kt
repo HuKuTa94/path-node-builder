@@ -4,7 +4,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.hukuta94.pathnodebuilder.calculator.filter.ComputeUnitDistanceMatrixFilter
 import com.hukuta94.pathnodebuilder.overwatch.adapter.`in`.desktop.DistanceMatrixCalculatorView
-import com.hukuta94.pathnodebuilder.overwatch.application.ComputeDistanceMatrixPipeline
+import com.hukuta94.pathnodebuilder.overwatch.application.port.ComputeDistanceMatrixPipeline
 import com.hukuta94.pathnodebuilder.overwatch.application.port.`in`.ComputeDistanceMatrixUseCase
 import com.hukuta94.pathnodebuilder.overwatch.filter.*
 
